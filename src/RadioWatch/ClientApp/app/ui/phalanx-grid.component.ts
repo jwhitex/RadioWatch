@@ -7,7 +7,7 @@ import { Store } from '../stores/_addenda';
 
 @Component({
     selector: 'phalanx-grid',
-    providers: [ PhalanxGridService ],
+    providers: [PhalanxGridService],
     template: require('./phalanx-grid.component.html'),
     styles: [require('./phalanx-grid.component.css')],
 })
@@ -28,7 +28,6 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
     direction: number = 1;
     currentPage: number = this.initialPage;
     totalRows: number = 0;
-    
     
     constructor(private phnxGridService: PhalanxGridService, private store: Store) {       
     }

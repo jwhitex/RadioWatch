@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, AfterViewInit } from '@angular/core';
+﻿import { Component } from '@angular/core';
 import { Store } from '../stores/_addenda';
 import 'rxjs/Rx';
 
@@ -9,20 +9,18 @@ import 'rxjs/Rx';
     styles: [require('./playlist.component.css')]
 })
 export class PlayListComponent {
-    pageSize = 10;
-    allowDelete = true;
-    totalRows: number;
-    gridName= 'playlistGrid';
-    columnMeta: any = [
-       { colName: "key", sortable: true, visible: false },
-       { colName: "artist", sortable: true, visible: true },
-       { colName: "song", sortable: true, visible: true },
-       { colName: "timeplayed", sortable: true, visible: true }
-    ];
-    //this could be a generic property..
     dataSource: string = "/api/playlist";
     local: boolean = true;
-
+    pageSize = 10;
+    allowDelete = true;
+    gridName = 'playlistGrid';
+    columnMeta: any = [
+       { colName: "Key", dataName:"key", sortable: true, visible: false, key:true },
+       { colName: "Artist", dataName: "artist", sortable: true, visible: true },
+       { colName: "Song", dataName: "song", sortable: true, visible: true },
+       { colName: "TimePlayed", dataName: "timePlayed", sortable: true, visible: true, date_pipe:"MM-dd-yyyy" }
+    ];
+    
     // columnMeta: any = [
     //     { colName: "id", sortable: true, visible: false },
     //     { colName: "_duration", sortable: true, visible: true },

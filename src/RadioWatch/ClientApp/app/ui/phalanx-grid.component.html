@@ -1,20 +1,23 @@
 ﻿<table class="table">
     <thead>
-    <tr>
-        <th *ngFor="let col of columns" [hidden]="!col.visible">
-             {{col.colName}}
+        <tr>
+            <th *ngFor="let col of columns" [hidden]="!col.visible">
+                {{col.colName}}
 
-            <a [hidden]="direction==-1 || !allowSorting || !col.sortable" (click)="sort(col.colName,-1)"><div class="glyphicon glyphicon-menu-down"></div></a>
-            <a [hidden]="direction==1 || !allowSorting || !col.sortable" (click)="sort(col.colName,1)"><div class="glyphicon glyphicon-menu-up"></div> </a>
-        </th>
+                <a [hidden]="direction==-1 || !allowSorting || !col.sortable" (click)="sort(col.colName,-1)"><div class="glyphicon glyphicon-menu-down"></div></a>
+                <a [hidden]="direction==1 || !allowSorting || !col.sortable" (click)="sort(col.colName,1)"><div class="glyphicon glyphicon-menu-up"></div> </a>
+            </th>
 
-        <th [hidden]="!allowDelete"></th>
-    </tr>
+            <th [hidden]="!allowDelete"></th>
+        </tr>
     </thead>
     <tbody>
         <tr *ngFor="let c of data | AutoGridSortPipe : [sortBy,direction]; let i = index;">
-            <td *ngFor="let col of columns" [hidden]="!col.visible">{{c[col.colName]}}</td>
-
+            <td *ngFor="let col of columns" [hidden]="!col.visible">
+                <phalanx-grid-column [value]="col.date_pipe ? (c[col.dataName] | date:col.date_pipe) :
+                                     c[col.dataName]">
+                </phalanx-grid-column>
+            </td>
             <td [hidden]="!allowDelete"><a (click)="onDeleteRow(c)"><div class="glyphicon glyphicon-trash"></div> </a></td>
         </tr>
     </tbody>
@@ -24,24 +27,21 @@
     <button class="btn btn-primary"
             (click)="onPageIndexChange(currentPage-1)"
             type="button"
-            [disabled]="currentPage-1<0"
-            >
-            
+            [disabled]="currentPage-1<0">
+
         <div class="glyphicon glyphicon-arrow-left"></div>
     </button>
     <button *ngFor="let pageIndex of pages;let ix = index;"
-            (click)="onPageIndexChange(pageIndex-1)" 
+            (click)="onPageIndexChange(pageIndex-1)"
             class="btn btn-primary"
             type="button"
-            [ngStyle]="{'background-color': paginationButtonColors[ix].background, 'color': paginationButtonColors[ix].character}"
-    >
+            [ngStyle]="{'background-color': paginationButtonColors[ix].background, 'color': paginationButtonColors[ix].character}">
         {{pageIndex}}
     </button>
     <button class="btn btn-primary"
             (click)="onPageIndexChange(currentPage+1)"
             type="button"
-            [disabled]="currentPage+2>pages.length"
-            >
+            [disabled]="currentPage+2>pages.length">
         <div class="glyphicon glyphicon-arrow-right"></div>
     </button>
 </div>

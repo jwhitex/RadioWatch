@@ -12,7 +12,7 @@ import {
     PlayListComponent,
 } from './containers/_addenda';
 import { containerDeclarations } from './app.declarations';
-import { PhalanxGridComponent } from './ui/_addenda';
+import { PhalanxGridComponent, PhalanxGridColumnComponent } from './ui/_addenda';
 import { AutoGridSortPipe } from './pipes/_addenda';
 
 @NgModule({
@@ -20,6 +20,7 @@ import { AutoGridSortPipe } from './pipes/_addenda';
     declarations: [
         ...containerDeclarations,
         PhalanxGridComponent,
+        PhalanxGridColumnComponent,
         AutoGridSortPipe
     ],
     imports: [
