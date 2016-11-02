@@ -13,6 +13,7 @@ export class PlayListComponent {
     local: boolean = true;
     pageSize = 10;
     allowDelete = true;
+    allowSort = true;
     gridName = 'playlistGrid';
     columnMeta: any = [
        { colName: "Key", dataName:"key", sortable: true, visible: false, key:true },

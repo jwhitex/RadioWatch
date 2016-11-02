@@ -11,8 +11,8 @@
 export interface IPhnxGridRequestState {
     pageSize: number;
     page: number;
-    sort: number;
-    by: string;
+    sort: string;
+    by: number;
 }
 export interface IPhnxGridResponseState {
     total: number;

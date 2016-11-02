@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using Serilog;
-
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+using static System.String;
 
 namespace RadioWatch.Controllers
 {
@@ -20,6 +20,8 @@ namespace RadioWatch.Controllers
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
+        public string Sort { get; set; }
+        public int By { get; set; }
     }
 
     public static class GridDataResponseExtensions
@@ -27,6 +29,20 @@ namespace RadioWatch.Controllers
         public static List<T> ApplyPaging<T>(this IQueryable<T> query, int page, int pageSize)
         {
             return query.Skip(page*pageSize).Take(pageSize).ToList();
+        }
+
+        public static IQueryable<T> ApplySorting<T>(this IQueryable<T> query, string sort, int by)
+        {
+            if (!IsNullOrWhiteSpace(sort))
+            {
+                var props = typeof(T).GetProperties();
+                var sortBy = props.FirstOrDefault(x => x.Name == sort.FirstOrDefault().ToString().ToUpper() + Join("", sort.Skip(1)));
+                if (sortBy != null)
+                {
+                    return by == -1 ? query.OrderByDescending(x => sortBy.GetValue(x)) : by == 1 ? query.OrderBy(x => sortBy.GetValue(x)) : query;
+                }
+            }
+            return query;
         }
     }
 
@@ -39,7 +55,7 @@ namespace RadioWatch.Controllers
         public JsonResult Values(GridDataRequest request)
         {
             var values = RadioRepository.Get();
-            return new JsonResult(new GridDataResponse<RadioTrack> { Data = values.AsQueryable().ApplyPaging(request.Page, request.PageSize), Total = values.Count });
+            return new JsonResult(new GridDataResponse<RadioTrack> { Data = values.AsQueryable().ApplySorting(request.Sort, request.By).ApplyPaging(request.Page, request.PageSize), Total = values.Count });
         }
 
         [HttpPost("")]
@@ -78,9 +94,9 @@ namespace RadioWatch.Controllers
         {
             Notes = new List<RadioTrack>
             {
-                new RadioTrack{ Key=1, Artist= "dirtyartist",  Song= "dirtyTrack",  TimePlayed= new DateTime(2010,1,1) },
+                new RadioTrack{ Key=1, Artist= "dirtyartist",  Song= "sta",  TimePlayed= new DateTime(2010,1,1) },
                 new RadioTrack{ Key=2, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1) },
-                new RadioTrack{ Key=3, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
+                new RadioTrack{ Key=3, Artist= "stankyartist", Song= "dirtyTrack", TimePlayed= new DateTime(2010,1,1)},
                 new RadioTrack{ Key=4, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
                 new RadioTrack{ Key=5, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
                 new RadioTrack{ Key=6, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},

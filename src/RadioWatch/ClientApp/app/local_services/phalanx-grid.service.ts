@@ -34,16 +34,17 @@ export class PhalanxGridService {
         this.storeHelper.add(identifier, gridState);
     }
 
-    getData(page: number): Observable<any> {
+    getData(page: number, sort?: string, by?: number): Observable<any> {
         const state = this.store.getState();
         const pageSize = state["phalanxGrid"].find(x => x.id === this.id).pageSize as number;
+        
         if (pageSize === 0)
             return Observable.empty();
         const dataEx: IPhnxGridRequestState = {
             page: page,
             pageSize: pageSize,
-            sort: null,
-            by: null
+            sort: sort,
+            by: by
         };
         console.log("call to api");
 
@@ -58,8 +59,11 @@ export class PhalanxGridService {
 
     private getDataLocalApi(request: IPhnxGridRequestState) {
         let pathlocal = this.path + `?page=${request.page}&pageSize=${request.pageSize}`;
+        if (request.sort && request.by) {
+            pathlocal += `&sort=${request.sort}&by=${request.by}`;
+        }
         return this.apiService.get(pathlocal)
-            .do(res => this.setState({ data: res.data, totalRows: res.total, currentPage: request.page }));
+            .do(res => this.setState({ data: res.data, totalRows: res.total, currentPage: request.page, sortBy: request.sort, direction: request.by }));
     }
 
     private getDataExternalApi(request: IPhnxGridRequestState) {

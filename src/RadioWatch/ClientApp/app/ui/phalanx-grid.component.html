@@ -4,15 +4,15 @@
             <th *ngFor="let col of columns" [hidden]="!col.visible">
                 {{col.colName}}
 
-                <a [hidden]="direction==-1 || !allowSorting || !col.sortable" (click)="sort(col.colName,-1)"><div class="glyphicon glyphicon-menu-down"></div></a>
-                <a [hidden]="direction==1 || !allowSorting || !col.sortable" (click)="sort(col.colName,1)"><div class="glyphicon glyphicon-menu-up"></div> </a>
+                <a [hidden]="direction==-1 || !allowSorting" (click)="sort(col.dataName,-1)"><div class="glyphicon glyphicon-menu-down"></div></a>
+                <a [hidden]="direction==1 || !allowSorting" (click)="sort(col.dataName,1)"><div class="glyphicon glyphicon-menu-up"></div> </a>
             </th>
 
             <th [hidden]="!allowDelete"></th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let c of data | AutoGridSortPipe : [sortBy,direction]; let i = index;">
+        <tr *ngFor="let c of data; let i = index;">
             <td *ngFor="let col of columns" [hidden]="!col.visible">
                 <phalanx-grid-column [value]="col.date_pipe ? (c[col.dataName] | date:col.date_pipe) :
                                      c[col.dataName]">

@@ -94,9 +94,11 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
             }));
     }
 
-    sort(key: string, dir: number) {
-        this.sortBy = key;
-        this.direction = dir;
+    sort(sort: string, by: number) {
+        this.phnxGridService.getData(this.currentPage, sort, by).do(() => {
+            this.sortBy = sort;
+            this.direction = by;
+        }).subscribe();
     }
 
     ngOnDestroy(): void {
