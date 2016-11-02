@@ -1,0 +1,47 @@
+﻿<table class="table">
+    <thead>
+    <tr>
+        <th *ngFor="let col of columns" [hidden]="!col.visible">
+             {{col.colName}}
+
+            <a [hidden]="direction==-1 || !allowSorting || !col.sortable" (click)="sort(col.colName,-1)"><div class="glyphicon glyphicon-menu-down"></div></a>
+            <a [hidden]="direction==1 || !allowSorting || !col.sortable" (click)="sort(col.colName,1)"><div class="glyphicon glyphicon-menu-up"></div> </a>
+        </th>
+
+        <th [hidden]="!allowDelete"></th>
+    </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let c of data | AutoGridSortPipe : [sortBy,direction]; let i = index;">
+            <td *ngFor="let col of columns" [hidden]="!col.visible">{{c[col.colName]}}</td>
+
+            <td [hidden]="!allowDelete"><a (click)="onDeleteRow(c)"><div class="glyphicon glyphicon-trash"></div> </a></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="btn-group" style="margin: 0px auto;" [ngStyle]="{'width': width}">
+    <button class="btn btn-primary"
+            (click)="onPageIndexChange(currentPage-1)"
+            type="button"
+            [disabled]="currentPage-1<0"
+            >
+            
+        <div class="glyphicon glyphicon-arrow-left"></div>
+    </button>
+    <button *ngFor="let pageIndex of pages;let ix = index;"
+            (click)="onPageIndexChange(pageIndex-1)" 
+            class="btn btn-primary"
+            type="button"
+            [ngStyle]="{'background-color': paginationButtonColors[ix].background, 'color': paginationButtonColors[ix].character}"
+    >
+        {{pageIndex}}
+    </button>
+    <button class="btn btn-primary"
+            (click)="onPageIndexChange(currentPage+1)"
+            type="button"
+            [disabled]="currentPage+2>pages.length"
+            >
+        <div class="glyphicon glyphicon-arrow-right"></div>
+    </button>
+</div>

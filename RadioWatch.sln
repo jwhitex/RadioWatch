@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{FE3A010E-DB92-4DC4-BF87-3C5426245751}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A5244B8-33ED-481B-8BB2-AAC483B3A652}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RadioWatch", "src\RadioWatch\RadioWatch.xproj", "{092007AE-98E8-43B6-80EA-FB0F59A6303F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{092007AE-98E8-43B6-80EA-FB0F59A6303F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{092007AE-98E8-43B6-80EA-FB0F59A6303F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{092007AE-98E8-43B6-80EA-FB0F59A6303F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{092007AE-98E8-43B6-80EA-FB0F59A6303F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{092007AE-98E8-43B6-80EA-FB0F59A6303F} = {FE3A010E-DB92-4DC4-BF87-3C5426245751}
+	EndGlobalSection
+EndGlobal
