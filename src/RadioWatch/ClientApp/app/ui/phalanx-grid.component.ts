@@ -56,15 +56,16 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
             }
         });
 
-        this.read();
+        this.read().subscribe();
 
     }
 
+    //more moduler..
     paginationButtonColors: any[] = [];
     onDataRequest() {
         this.pages = [];
         this.paginationButtonColors = [];
-        const totalPages: any = Math.ceil(this.totalRows / this.pageSize);
+        const totalPages: any = Math.ceil(this.totalRows / this.pageSize) + 1;
         this.width = ((totalPages * 80) + this.pageSize * 3) + "px";
 
         for (let i = 0; i < Math.ceil(this.totalRows / this.pageSize); i++) {
@@ -80,22 +81,25 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
     }
 
     onPageIndexChange(page: number) {
-        this.phnxGridService.changePage(page).subscribe(() =>
-            this.paginationButtonColors = this.paginationButtonColors.map((item, index) => {
-                if (index === page) {
-                    return {
-                        background: "#fff",
-                        character: "#337ab7"
-                    }
-                } else {
-                    return {
-                        background: "#337ab7",
-                        character: "#fff"
-                    };
-                }          
-            }));
+        this.phnxGridService.changePage(page).subscribe(() => this.displayCurrentPage(page));
     }
 
+    private displayCurrentPage(page: number) {
+        this.paginationButtonColors = this.paginationButtonColors.map((item, index) => {
+            if (index === page) {
+                return {
+                    background: "#fff",
+                    character: "#337ab7"
+                }
+            } else {
+                return {
+                    background: "#337ab7",
+                    character: "#fff"
+                };
+            }
+        });
+    }
+    
     sort(sort: string, by: number) {
         this.phnxGridService.getData(this.currentPage, sort, by).do(() => {
             this.sortBy = sort;
@@ -106,11 +110,11 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
     bindDataSource(source: string) {
         this.dataSource = source;
         this.phnxGridService.path = this.dataSource;
-        this.read();
+        return this.read().do(res => this.displayCurrentPage(0));
     }
 
     read() {
-        return this.phnxGridService.getData(this.currentPage).do(res => this.onDataRequest()).subscribe();
+        return this.phnxGridService.getData(this.currentPage).do(res => this.onDataRequest());
     }
 
     ngOnDestroy(): void {

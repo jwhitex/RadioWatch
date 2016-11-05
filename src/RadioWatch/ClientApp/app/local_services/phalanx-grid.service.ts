@@ -16,12 +16,13 @@ import { Subject } from 'rxjs/Subject';
 @Injectable()
 export class PhalanxGridService {
 
+    //too much outside store..
     id: string;
     path: string;
     local = true;
 
     constructor(private apiService: ApiService, private storeHelper: StoreHelper, private store: Store) {
-        
+
     }
 
     setState(state: any) {
@@ -40,7 +41,7 @@ export class PhalanxGridService {
 
         if (!sort && !by) {
             const findState = state["phalanxGrid"].find(x => x.id === this.id);
-            if (typeof  findState !== "undefined" && findState) {
+            if (typeof findState !== "undefined" && findState) {
                 sort = findState.sortBy;
                 by = findState.direction;
             }
@@ -60,7 +61,7 @@ export class PhalanxGridService {
             return this.getDataLocalApi(dataEx);
         } else {
             return this.getDataExternalApi(dataEx);
-        }      
+        }
     }
 
     private getDataLocalApi(request: IPhnxGridRequestState) {
@@ -72,28 +73,47 @@ export class PhalanxGridService {
             .do(res => this.setState({ data: res.data, totalRows: res.total, currentPage: request.page, sortBy: request.sort, direction: request.by }));
     }
 
+    //this no suitable for library code...
     private getDataExternalApi(request: IPhnxGridRequestState) {
         return this.apiService.getExternal(this.path)
             .do(res => {
-                let data: any[] = res.playlist[0].playlist;
-                let total = data.length;
-                var skip = request.pageSize * (request.page);
+                let data: any[] = res.playlist[0];
+                if (typeof data !== "undefined" && data) {
+                    //this is the case with no search..
+                    const playlistData = data["playlist"];
+                    if (typeof playlistData !== "undefined" && playlistData) {
+                        const total = playlistData.length;
+                        const skip = request.pageSize * (request.page);
+                        if (request.sort && request.by) {
+                            this.sortArray(playlistData, request.sort, request.by);
+                        }
+                        const pageData = playlistData.slice(skip, skip + request.pageSize);
+                        this.setState({ data: pageData, totalRows: total, currentPage: request.page, sortBy: request.sort, direction: request.by });
+                    } else {
+                        data = res.playlist;
+                        const total = data.length;
+                        const skip = request.pageSize * (request.page);
 
-                if (request.sort && request.by) {
-                    data.sort((a: any, b: any) => {
-                        if (a[request.sort] > b[request.sort]) {
-                            return 1 * request.by;
+                        if (request.sort && request.by) {
+                            this.sortArray(data, request.sort, request.by);
                         }
-                        if (a[request.sort] < b[request.sort]) {
-                            return -1 * request.by;
-                        }
-                        return 0;
-                    });
+                        const pageData = data.slice(skip, skip + request.pageSize);
+                        this.setState({ data: pageData, totalRows: total, currentPage: request.page, sortBy: request.sort, direction: request.by });
+                    }
                 }
-
-                var pageData = data.slice(skip, skip + request.pageSize);
-                this.setState({ data: pageData, totalRows: total, currentPage: request.page, sortBy: request.sort, direction: request.by });
             });
+    }
+
+    sortArray(data: any[], sort: string, by: number) {
+        data.sort((a: any, b: any) => {
+            if (a[sort] > b[sort]) {
+                return 1 * by;
+            }
+            if (a[sort] < b[sort]) {
+                return -1 * by;
+            }
+            return 0;
+        });
     }
 
     changePage(page: number) {
@@ -107,7 +127,7 @@ export class PhalanxGridService {
     purgeGridFromStore() {
         this.storeHelper.findAndDelete("phalanxGrid", this.id);
     }
-   
+
 }
 
 
