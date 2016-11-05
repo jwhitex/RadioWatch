@@ -20,7 +20,7 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
     @Input() dataSource: string = "";
     @Input() local: boolean = true;
     @Input() gridName: string = "phalanxGrid1";
-
+    
     data: any = [];
     pages: any = [];
     width: string = "";
@@ -56,12 +56,14 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
             }
         });
 
-        this.phnxGridService.getData(this.currentPage).do(res => this.onDataRequest()).subscribe();
+        this.read();
 
     }
 
     paginationButtonColors: any[] = [];
     onDataRequest() {
+        this.pages = [];
+        this.paginationButtonColors = [];
         const totalPages: any = Math.ceil(this.totalRows / this.pageSize);
         this.width = ((totalPages * 80) + this.pageSize * 3) + "px";
 
@@ -99,6 +101,16 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
             this.sortBy = sort;
             this.direction = by;
         }).subscribe();
+    }
+
+    bindDataSource(source: string) {
+        this.dataSource = source;
+        this.phnxGridService.path = this.dataSource;
+        this.read();
+    }
+
+    read() {
+        return this.phnxGridService.getData(this.currentPage).do(res => this.onDataRequest()).subscribe();
     }
 
     ngOnDestroy(): void {

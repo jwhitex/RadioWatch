@@ -1,52 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using RadioWatch.Helpers.Grid;
 using Serilog;
-using static System.String;
 
 namespace RadioWatch.Controllers
 {
-
-    public class GridDataResponse<T>
-    {
-        public List<T> Data { get; set; }
-        public int Total { get; set; }
-    }
-
-    public class GridDataRequest
-    {
-        public int Page { get; set; }
-        public int PageSize { get; set; }
-        public string Sort { get; set; }
-        public int By { get; set; }
-    }
-
-    public static class GridDataResponseExtensions
-    {
-        public static List<T> ApplyPaging<T>(this IQueryable<T> query, int page, int pageSize)
-        {
-            return query.Skip(page*pageSize).Take(pageSize).ToList();
-        }
-
-        public static IQueryable<T> ApplySorting<T>(this IQueryable<T> query, string sort, int by)
-        {
-            if (!IsNullOrWhiteSpace(sort))
-            {
-                var props = typeof(T).GetProperties();
-                var sortBy = props.FirstOrDefault(x => x.Name == sort.FirstOrDefault().ToString().ToUpper() + Join("", sort.Skip(1)));
-                if (sortBy != null)
-                {
-                    return by == -1 ? query.OrderByDescending(x => sortBy.GetValue(x)) : by == 1 ? query.OrderBy(x => sortBy.GetValue(x)) : query;
-                }
-            }
-            return query;
-        }
-    }
-
-
     [Route("api/[controller]")]
     public class PlaylistController : Controller
     {
@@ -96,7 +57,7 @@ namespace RadioWatch.Controllers
             {
                 new RadioTrack{ Key=1, Artist= "dirtyartist",  Song= "sta",  TimePlayed= new DateTime(2010,1,1) },
                 new RadioTrack{ Key=2, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1) },
-                new RadioTrack{ Key=3, Artist= "stankyartist", Song= "dirtyTrack", TimePlayed= new DateTime(2010,1,1)},
+                new RadioTrack{ Key=3, Artist= "stankyartist", Song= "dirtyTrack", TimePlayed= new DateTime(1990,1,1)},
                 new RadioTrack{ Key=4, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
                 new RadioTrack{ Key=5, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
                 new RadioTrack{ Key=6, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},

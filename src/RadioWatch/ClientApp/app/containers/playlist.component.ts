@@ -21,7 +21,9 @@ export class PlayListComponent {
        { colName: "Song", dataName: "song", sortable: true, visible: true },
        { colName: "TimePlayed", dataName: "timePlayed", sortable: true, visible: true, date_pipe:"MM-dd-yyyy" }
     ];
-    
+
+    datesomething = (new Date).getTime();
+
     // columnMeta: any = [
     //     { colName: "id", sortable: true, visible: false },
     //     { colName: "_duration", sortable: true, visible: true },

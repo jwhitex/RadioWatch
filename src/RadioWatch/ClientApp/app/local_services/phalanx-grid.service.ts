@@ -37,7 +37,15 @@ export class PhalanxGridService {
     getData(page: number, sort?: string, by?: number): Observable<any> {
         const state = this.store.getState();
         const pageSize = state["phalanxGrid"].find(x => x.id === this.id).pageSize as number;
-        
+
+        if (!sort && !by) {
+            const findState = state["phalanxGrid"].find(x => x.id === this.id);
+            if (typeof  findState !== "undefined" && findState) {
+                sort = findState.sortBy;
+                by = findState.direction;
+            }
+        }
+
         if (pageSize === 0)
             return Observable.empty();
         const dataEx: IPhnxGridRequestState = {
@@ -48,8 +56,6 @@ export class PhalanxGridService {
         };
         console.log("call to api");
 
-        //testing
-        //return this.getDataStatic(dataEx);
         if (this.local) {
             return this.getDataLocalApi(dataEx);
         } else {
@@ -69,19 +75,25 @@ export class PhalanxGridService {
     private getDataExternalApi(request: IPhnxGridRequestState) {
         return this.apiService.getExternal(this.path)
             .do(res => {
-                
                 let data: any[] = res.playlist[0].playlist;
                 let total = data.length;
                 var skip = request.pageSize * (request.page);
-                var pageData = data.slice(skip, skip + request.pageSize);
-                this.setState({ data: pageData, totalRows: total, currentPage: request.page });
-            });
-    }
 
-    private getDataStatic(request: IPhnxGridRequestState) {
-        return this.getDataMock(request)
-            .do(res => this.setState({ data: res.data, totalRows: res.total, currentPage: request.page }))
-            .subscribe();
+                if (request.sort && request.by) {
+                    data.sort((a: any, b: any) => {
+                        if (a[request.sort] > b[request.sort]) {
+                            return 1 * request.by;
+                        }
+                        if (a[request.sort] < b[request.sort]) {
+                            return -1 * request.by;
+                        }
+                        return 0;
+                    });
+                }
+
+                var pageData = data.slice(skip, skip + request.pageSize);
+                this.setState({ data: pageData, totalRows: total, currentPage: request.page, sortBy: request.sort, direction: request.by });
+            });
     }
 
     changePage(page: number) {
@@ -95,29 +107,7 @@ export class PhalanxGridService {
     purgeGridFromStore() {
         this.storeHelper.findAndDelete("phalanxGrid", this.id);
     }
-
-    //add sort..
-    getDataMock(request: IPhnxGridRequestState): Observable<IPhnxGridResponseState> {
-        return Observable.create(observer => {
-
-            var array = [
-                { key: "1", artist: "dirtyartist", song: "dirtyTrack", timeplayed: "time" },
-                { key: "2", artist: "stankyartist", song: "stankyTrack", timeplayed: "timewise" },
-                { key: "3", artist: "stankyartist", song: "stankyTrack", timeplayed: "timewise" },
-                { key: "4", artist: "stankyartist", song: "stankyTrack", timeplayed: "timewise" },
-                { key: "5", artist: "stankyartist", song: "stankyTrack", timeplayed: "timewise" },
-                { key: "6", artist: "stankyartist", song: "stankyTrack", timeplayed: "timewise" },
-                { key: "7", artist: "stankyartist", song: "stankyTrack", timeplayed: "timewise" },
-            ];
-
-            var skip = request.pageSize * (request.page);
-            var pageData = array.slice(skip, skip + request.pageSize);
-            var total = array.length;
-
-            observer.next({ data: pageData, total: total } as IPhnxGridResponseState);
-            observer.complete();
-        });
-    }
+   
 }
 
 

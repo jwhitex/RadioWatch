@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { UniversalModule } from 'angular2-universal';
 import { providers } from './app.providers';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import {
     AppComponent,
     NavMenuComponent,
@@ -10,10 +11,13 @@ import {
     FetchDataComponent,
     CounterComponent,
     PlayListComponent,
+    TrackListComponent
 } from './containers/_addenda';
+
 import { containerDeclarations } from './app.declarations';
-import { PhalanxGridComponent, PhalanxGridColumnComponent } from './ui/_addenda';
+import { PhalanxGridComponent, PhalanxGridColumnComponent} from './ui/_addenda';
 import { AutoGridSortPipe } from './pipes/_addenda';
+
 
 @NgModule({
     bootstrap: [ AppComponent ],
@@ -25,12 +29,14 @@ import { AutoGridSortPipe } from './pipes/_addenda';
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
+        FormsModule,
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'counter', component: CounterComponent },
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'playlist', component: PlayListComponent },
+            { path: 'tracklist', component: TrackListComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],
