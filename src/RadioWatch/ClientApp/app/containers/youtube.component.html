@@ -1,0 +1,18 @@
+﻿
+<youtube-script></youtube-script>
+<h1>Watch</h1>
+<div class="container-fluid">
+    <div class="row">
+        <div style="height: 200px; width: 356px;">
+            <div id="player" class="embed-responsive embed-responsive-16by9">
+                <div id="placeholder" style="width: 100%" class="embed-responsive-item"></div>
+                <div class="embed-responsive-item" style="width: 100%; z-index: 90; background-color: black;" *ngIf="!onPlaying">
+                    <div class="image-wrap">
+                        <img style="height: 200px; width: 356px;" src="{{currentlyLoadedImg}}">
+                    </div>
+                    <div class="play-button" (click)="loadStagedVideo($event)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

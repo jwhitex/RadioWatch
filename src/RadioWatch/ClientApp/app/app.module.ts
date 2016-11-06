@@ -11,11 +11,12 @@ import {
     FetchDataComponent,
     CounterComponent,
     PlayListComponent,
-    TrackListComponent
+    TrackListComponent,
+    YoutubeComponent
 } from './containers/_addenda';
 
 import { containerDeclarations } from './app.declarations';
-import { PhalanxGridComponent, PhalanxGridColumnComponent} from './ui/_addenda';
+import { PhalanxGridComponent, PhalanxGridColumnComponent, PhalanxGridColumnVideoComponent} from './ui/_addenda';
 import { AutoGridSortPipe } from './pipes/_addenda';
 
 
@@ -25,6 +26,7 @@ import { AutoGridSortPipe } from './pipes/_addenda';
         ...containerDeclarations,
         PhalanxGridComponent,
         PhalanxGridColumnComponent,
+        PhalanxGridColumnVideoComponent,
         AutoGridSortPipe
     ],
     imports: [
@@ -37,6 +39,7 @@ import { AutoGridSortPipe } from './pipes/_addenda';
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'playlist', component: PlayListComponent },
             { path: 'tracklist', component: TrackListComponent },
+            { path: 'youtube', component: YoutubeComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

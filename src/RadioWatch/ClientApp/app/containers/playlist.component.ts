@@ -19,7 +19,8 @@ export class PlayListComponent {
        { colName: "Key", dataName:"key", sortable: true, visible: false, key:true },
        { colName: "Artist", dataName: "artist", sortable: true, visible: true },
        { colName: "Song", dataName: "song", sortable: true, visible: true },
-       { colName: "TimePlayed", dataName: "timePlayed", sortable: true, visible: true, date_pipe:"MM-dd-yyyy" }
+       { colName: "TimePlayed", dataName: "timePlayed", sortable: true, visible: true, date_pipe: "MM-dd-yyyy" },
+       { colName: "Video", video: "youtube", sortable: false, visible: true }
     ];
 
     datesomething = (new Date).getTime();
