@@ -1,6 +1,6 @@
 ﻿import { Http } from '@angular/http';
 import { Injectable, NgZone, Inject } from '@angular/core';
-import { WindowRefService } from './window-ref.service';
+import { WindowRefService } from '../services/_addenda';
 
 @Injectable()
 export class YoutubeService {
@@ -18,7 +18,8 @@ export class YoutubeService {
     windowDefined = false;
 
     constructor(public windowRef: WindowRefService) {
-        this.setupYoutubeService();
+        //Don't reference global objects in constructors!
+        //this.setupYoutubeService();
     }
 
     setupYoutubeService() {
@@ -56,7 +57,7 @@ export class YoutubeService {
     setupPlayer() {
         console.log("Running Setup Player");
         this.window['onYouTubeIframeAPIReady'] = () => {
-            if (window['YT']) {
+            if (this.window['YT']) {
                 console.log('Youtube API is ready');
                 this.youtube.ready = true;
                 this.bindPlayer('placeholder');

@@ -1,4 +1,4 @@
-﻿import { Component, Input, AfterViewInit } from '@angular/core';
+﻿import { Component, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import {  DocumentRefService } from "../services/_addenda";
 
 @Component({
@@ -10,7 +10,6 @@ import {  DocumentRefService } from "../services/_addenda";
 export class YoutubeScriptComponent implements AfterViewInit {
     documentDefined = false;
     constructor(public documentService: DocumentRefService) {
-        
         this.setupYoutubeScripts();
     }
 

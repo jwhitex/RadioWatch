@@ -1,5 +1,5 @@
 ﻿import { Component, AfterViewInit, Input } from '@angular/core';
-import { YoutubeService } from '../services/_addenda';
+import { YoutubeService } from '../local_services/_addenda';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
@@ -7,13 +7,14 @@ import 'rxjs/add/operator/map';
 @Component({
     selector: 'youtube',
     template: require('./youtube.component.html'),
-    styles: [require('./youtube.component.css')]
+    styles: [require('./youtube.component.css')],
+    providers: [ YoutubeService ]
 })
 export class YoutubeComponent implements AfterViewInit {
 
     @Input() searchTerm: string;
     //channelID: string = '';
-    maxResults: string = '2';
+    maxResults: string = '1';
     pageToken: string;
     googleToken: string = '';
     searchQuery: string = 'rick and morty everyone dies';
