@@ -35,6 +35,7 @@ export class YoutubeScriptComponent implements AfterViewInit {
             const firstScriptTag = ref[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
             this.documentDefined = true;
+            console.log("youtube scripts loaded");
         }
     }
 }

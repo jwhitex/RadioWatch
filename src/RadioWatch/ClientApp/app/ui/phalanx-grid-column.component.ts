@@ -12,7 +12,7 @@ export class PhalanxGridColumnComponent implements  OnInit {
     colName: string;
     sortable: boolean;
     visible: boolean;
-    @Input() value: boolean;
+    @Input() value: any;
     @Input() pipe: PipeTransform;
     
     ngOnInit() {

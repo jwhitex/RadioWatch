@@ -16,7 +16,7 @@
             <td *ngFor="let col of columns" [hidden]="!col.visible">
                 <phalanx-grid-column *ngIf="!col.video" [value]="col.date_pipe ? (c[col.dataName] | date:col.date_pipe) : c[col.dataName]">
                 </phalanx-grid-column>
-                <phalanx-grid-column-video *ngIf="col.video">
+                <phalanx-grid-column-video *ngIf="col.video" [searchTerm]="buildVideoSearch(col.searchBy, c)" [playerId]="'youtube_embed_placeholder_'+ i">
                 </phalanx-grid-column-video>
             </td>
             <td [hidden]="!allowDelete"><a (click)="onDeleteRow(c)"><div class="glyphicon glyphicon-trash"></div> </a></td>

@@ -9,11 +9,13 @@ import { PipeTransform } from '@angular/core';
 
 })
 export class PhalanxGridColumnVideoComponent implements OnInit {
-    colName: string;
-    sortable: boolean;
-    visible: boolean;
-    @Input() value: boolean;
-    @Input() pipe: PipeTransform;
+    //colName: string;
+    //sortable: boolean;
+    //visible: boolean;
+    //@Input() value: boolean;
+    //@Input() pipe: PipeTransform;
+    @Input() playerId: string;
+    @Input() searchTerm: string;
 
     ngOnInit() {
 

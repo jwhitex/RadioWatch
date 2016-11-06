@@ -113,6 +113,14 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
         return this.read().do(res => this.displayCurrentPage(0));
     }
 
+    //video support
+    buildVideoSearch(searchBy: any, dataObject: any): string {
+        return searchBy ? (() => {
+            let termKeys = searchBy.split(',');
+            let terms = termKeys.map(x => dataObject[x]); return terms.join(' ');
+        }).call([]) : 'rick and morty everyone dies';
+    }
+
     read() {
         return this.phnxGridService.getData(this.currentPage).do(res => this.onDataRequest());
     }

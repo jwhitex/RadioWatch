@@ -13,7 +13,7 @@ export class TrackListComponent implements OnInit {
     private gridComponent: PhalanxGridComponent;
 
     pageSize = 10;
-    allowDelete = true;
+    allowDelete = false;
     allowSort = true;
     gridName = 'trackListGrid';
     columnMeta: any = [
@@ -22,14 +22,15 @@ export class TrackListComponent implements OnInit {
          { colName: "Start", dataName: "_start_time", sortable: true, visible: true, date_pipe: "MM/dd/yyyy" },
          { colName: "Track", dataName: "trackName", sortable: true, visible: true },
          { colName: "Artist", dataName: "artistName", sortable: true, visible: true },
-         { colName: "Collection", dataName: "collectionName", sortable: true, visible: true },
+         { colName: "Collection", dataName: "collectionName", sortable: true, visible: false },
+         { colName: "Youtube", sortable: true, visible: true, video: "youtube", searchBy:"trackName,artistName" }
          //{ colName: "buy", sortable: true, visible: true }
     ];
     dataSource: string;
     local: boolean = false;
     //future feature:
     //delayRead = true;
-
+    
     searchFormModel = {
         queryDate: "",
         queryTerm: ""
