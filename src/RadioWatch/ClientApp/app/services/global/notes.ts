@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api';
-import { StoreHelper } from '../stores/_addenda';
-//what is rxjs/Rx
+import { StoreHelper } from '../../stores/_addenda';
 import 'rxjs/Rx';
 
 @Injectable()

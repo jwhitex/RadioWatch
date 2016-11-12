@@ -1,6 +1,6 @@
 ﻿import { Http } from '@angular/http';
 import { Injectable, NgZone, Inject } from '@angular/core';
-import { WindowRefService } from '../services/_addenda';
+import { WindowRefService } from '../global/_addenda';
 
 export interface IYoutubeEmbed {
     ready: boolean,

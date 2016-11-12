@@ -1,5 +1,5 @@
 ﻿import { Component, AfterViewInit, OnInit, Input } from '@angular/core';
-import { YoutubeService } from '../local_services/_addenda';
+import { YoutubeService } from '../services/local/_addenda';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 

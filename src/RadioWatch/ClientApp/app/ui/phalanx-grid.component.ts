@@ -2,8 +2,8 @@
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { AutoGridSortPipe } from '../pipes/_addenda';
-import { PhalanxGridService } from '../local_services/_addenda';
-import { Store } from '../stores/_addenda';
+import { PhalanxGridService } from '../services/local/_addenda';
+import { PhalanxGridStore } from '../stores/_addenda';
 
 @Component({
     selector: 'phalanx-grid',
@@ -29,7 +29,7 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
     currentPage: number = this.initialPage;
     totalRows: number = 0;
     
-    constructor(private phnxGridService: PhalanxGridService, private store: Store) {       
+    constructor(private phnxGridService: PhalanxGridService, private store: PhalanxGridStore) {       
     }
     
     ngOnInit() {
@@ -117,7 +117,8 @@ export class PhalanxGridComponent implements  OnInit, OnDestroy {
     buildVideoSearch(searchBy: any, dataObject: any): string {
         return searchBy ? (() => {
             let termKeys = searchBy.split(',');
-            let terms = termKeys.map(x => dataObject[x]); return terms.join(' ');
+            let terms = termKeys.map(x => dataObject[x]); 
+            return terms.join(' ');
         }).call([]) : 'rick and morty everyone dies';
     }
 

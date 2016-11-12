@@ -13,7 +13,8 @@ export class ApiService {
         Accept: 'application/json'
     });
     options: RequestOptions = new RequestOptions({ headers: this.headers });
-    
+
+    //todo: set global config..
     api_url: string = 'http://localhost:3195';
 
     //bind to context of the class 'http'

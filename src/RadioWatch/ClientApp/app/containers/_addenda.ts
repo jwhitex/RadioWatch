@@ -1,7 +1,10 @@
 ﻿export { AppComponent } from './app.component';
-export { CounterComponent } from './counter.component';
-export { FetchDataComponent } from './fetchdata.component';
-export { HomeComponent } from './home.component';
+export { HomeComponent } from './home/home.component';
 export { NavMenuComponent } from './navmenu.component';
-export { PlayListComponent } from './playlist.component';
-export { TrackListComponent } from './npr/tracklist.component';
+export { PlayListComponent } from './tracks/playlist.component';
+export { TrackListComponent } from './tracks/tracklist.component';
+export { 
+    PhalanxGridLogicComponent, 
+    PhalanxGridUiComponent, 
+    PhalanxGridViewComponent
+} from './grid'

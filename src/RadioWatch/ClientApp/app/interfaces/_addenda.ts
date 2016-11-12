@@ -1,1 +1,6 @@
-﻿export { IPhnxGridState, IPhnxGridRequestState, IPhnxGridResponseState } from './phalanx-grid.model';
+﻿export { IPhnxGrid } from './IPhnxGrid';
+export { IPhnxGridRequestState } from './IPhnxGridRequestState';
+export { IPhnxGridResponseState } from './IPhnxGridResponseState';
+
+
+

@@ -1,16 +1,14 @@
 ﻿import { Injectable } from '@angular/core';
-import { ApiService } from '../services/_addenda';
-import { Store, StoreHelper } from '../stores/_addenda';
+import { ApiService } from '../global/_addenda';
+import { PhalanxGridStore, PhalanxGridStoreHelper } from '../../stores/_addenda';
 import {
-    IPhnxGridState,
+    IPhnxGrid,
     IPhnxGridRequestState,
     IPhnxGridResponseState
-} from '../interfaces/_addenda';
+} from '../../interfaces/_addenda';
 import 'rxjs/Rx';
-
-//remove later
 import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+
 
 
 @Injectable()
@@ -21,8 +19,7 @@ export class PhalanxGridService {
     path: string;
     local = true;
 
-    constructor(private apiService: ApiService, private storeHelper: StoreHelper, private store: Store) {
-
+    constructor(private apiService: ApiService, private storeHelper: PhalanxGridStoreHelper, private store: PhalanxGridStore) {
     }
 
     setState(state: any) {
@@ -30,7 +27,7 @@ export class PhalanxGridService {
         this.storeHelper.findAndUpdate('phalanxGrid', Object.assign({ id: this.id }, state));
     }
 
-    initialize(identifier: string, gridState: IPhnxGridState) {
+    initialize(identifier: string, gridState: IPhnxGrid) {
         this.id = gridState.id;
         this.storeHelper.add(identifier, gridState);
     }

@@ -1,3 +1,3 @@
-﻿export { Store } from './store';
-export { StoreHelper } from './store-helper';
+﻿export { Store, StoreHelper } from './store';
+export { PhalanxGridStore, PhalanxGridStoreHelper } from './phalanx-grid.store';
 

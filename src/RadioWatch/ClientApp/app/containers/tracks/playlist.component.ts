@@ -1,5 +1,5 @@
 ﻿import { Component } from '@angular/core';
-import { Store } from '../stores/_addenda';
+import { Store } from '../../stores/_addenda';
 import 'rxjs/Rx';
 
 
