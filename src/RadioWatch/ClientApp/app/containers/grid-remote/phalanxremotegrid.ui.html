@@ -17,7 +17,7 @@
         <!--<div *ngIf="data.size>0 && columns.size>0">-->
         <tr *ngFor="let c of data; let i = index;">
             <td *ngFor="let col of setting.columns" [hidden]="!col.visible">
-                    <phx-grid-block [value]="c.data[col.dataName]"></phx-grid-block>      
+                    <phx-remote-grid-block [value]="c.data[col.dataName]"></phx-remote-grid-block>      
             </td>
             <td [hidden]="!setting.allowDelete"><a (click)="deleteRow(c)"><div class="glyphicon glyphicon-trash"></div> </a></td>
         </tr>

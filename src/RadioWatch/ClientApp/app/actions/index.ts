@@ -5,3 +5,10 @@ export {
     IPhxGridRequest,
     IPhxGridSortDescriptor
 } from './phalanxgrid.actions';
+export {
+    PhxRmtGridActions,
+    IPhxRmtGridInit,
+    IPhxRmtGridInitColumn,
+    IPhxRmtGridRequest,
+    IPhxRmtGridSortDescriptor
+} from './phalanxremotegrid.actions';

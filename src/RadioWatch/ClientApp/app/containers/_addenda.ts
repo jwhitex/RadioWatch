@@ -6,5 +6,12 @@ export { TrackListComponent } from './tracks/tracklist.component';
 export { 
     PhalanxGridLogicComponent, 
     PhalanxGridUiComponent, 
-    PhalanxGridViewComponent
+    PhalanxGridViewComponent,
+    PhalanxGridBlockComponent
 } from './grid'
+export { 
+    PhalanxRemoteGridLogicComponent, 
+    PhalanxRemoteGridUiComponent, 
+    PhalanxRemoteGridViewComponent,
+    PhalanxRemoteGridBlockComponent
+} from './grid-remote'

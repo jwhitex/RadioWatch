@@ -22,6 +22,8 @@ import { AsyncPipe } from '@angular/common';
     [pages]='pages$ | async'
     [by]='by$ | async'
     [page]='page$ | async'
+    (changePageEvent)="onPageChange($event)"
+    (sortEvent)="onSort($event)"
     ></phx-grid-ui>
     `
 })
@@ -35,12 +37,7 @@ export class PhalanxGridLogicComponent implements OnInit {
     @select(['phxGrid', 'pages']) pages$: Observable<List<number>>;
     @select(['phxGrid', 'by']) by$: Observable<number>;
     @select(['phxGrid', 'page']) page$: Observable<number>;
-
-    // data = List<IPhxGridItemState>();
-    // columns = List<IPhxGridColumnState>();
-    // dataSub: Subscription;
-    // columnSub: Subscription;
-      
+     
     constructor(private phxGridActions: PhxGridActions) {
     }
 
@@ -58,8 +55,8 @@ export class PhalanxGridLogicComponent implements OnInit {
          this.phxGridActions.phxGridPageChange(page);
      }
 
-     onSort(sort: string, by: number){
-         this.phxGridActions.phxGridSort({ sort: sort, by: by});
+     onSort(sortBy){
+         this.phxGridActions.phxGridSort(sortBy);
      }
 
      onDeleteRow(){
