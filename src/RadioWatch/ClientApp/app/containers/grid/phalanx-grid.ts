@@ -11,7 +11,7 @@ import { AsyncPipe } from '@angular/common';
 
 
 @Component({
-    selector: 'phx-grid-lc',
+    selector: 'phx-grid',
     providers: [ PhxGridActions, AsyncPipe ],
     template: `
     <phx-grid-ui
@@ -27,7 +27,7 @@ import { AsyncPipe } from '@angular/common';
     ></phx-grid-ui>
     `
 })
-export class PhalanxGridLogicComponent implements OnInit {
+export class PhalanxGridComponent implements OnInit {
     @Input() init: IPhxGridInit;
        
     @select(['phxGrid', 'data']) data$: Observable<List<IPhxGridItemState>>;

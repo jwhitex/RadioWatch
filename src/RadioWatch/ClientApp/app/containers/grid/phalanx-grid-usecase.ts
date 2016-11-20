@@ -1,27 +1,27 @@
 import { Component } from '@angular/core';
-import { IPhxRmtGridInit, IPhxRmtGridInitColumn } from '../../actions';
+import { IPhxGridInit, IPhxGridInitColumn } from '../../actions';
 import { List } from 'immutable';
 
 @Component({
-    selector: 'phx-remote-grid-vc',
+    selector: 'phx-grid-vc',
     template: `
-    <phx-remote-grid-lc
+    <phx-grid
     [init]='init'
     >
-    </phx-remote-grid-lc>
+    </phx-grid>
     `
 })
-export class PhalanxRemoteGridViewComponent {
+export class PhalanxGridExampleComponent {
     constructor() { }
 
-    cols: List<IPhxRmtGridInitColumn> = List<IPhxRmtGridInitColumn>([
+    cols: List<IPhxGridInitColumn> = List<IPhxGridInitColumn>([
         { colName: "Key", dataName: "key", sortable: true, visible: false, date_pipe: null },
         { colName: "Artist", dataName: "artist", sortable: true, visible: true, date_pipe: null },
         { colName: "Song", dataName: "song", sortable: true, visible: true, date_pipe: null },
         { colName: "TimePlayed", dataName: "timePlayed", sortable: true, visible: true, date_pipe: "MM-dd-yyyy" },
     ]);
 
-    init: IPhxRmtGridInit = {
+    init: IPhxGridInit = {
         id: 'playlistGrid',
         dataSource: "/api/playlist",
         pageSize: 2,
@@ -30,6 +30,4 @@ export class PhalanxRemoteGridViewComponent {
         initialPage: 0,
         columns: this.cols
     }
-
-    ngOnInit() { }
 }

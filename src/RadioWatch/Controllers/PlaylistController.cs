@@ -55,13 +55,13 @@ namespace RadioWatch.Controllers
         {
             Notes = new List<RadioTrack>
             {
-                new RadioTrack{ Key=1, Artist= "dirtyartist",  Song= "sta",  TimePlayed= new DateTime(2010,1,1) },
-                new RadioTrack{ Key=2, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1) },
-                new RadioTrack{ Key=3, Artist= "stankyartist", Song= "dirtyTrack", TimePlayed= new DateTime(1990,1,1)},
-                new RadioTrack{ Key=4, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
-                new RadioTrack{ Key=5, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
-                new RadioTrack{ Key=6, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1)},
-                new RadioTrack{ Key=7, Artist= "stankyartist", Song= "stankyTrack", TimePlayed= new DateTime(2010,1,1) },
+                new RadioTrack{ Key=1, Artist= "Bobby Rush",  Song= "Funk o’ De Funk",  TimePlayed= new DateTime(2010,1,1) },
+                new RadioTrack{ Key=2, Artist= "Devon Allman", Song= " Shattered Times", TimePlayed= new DateTime(2010,1,1) },
+                new RadioTrack{ Key=3, Artist= "Seth Walker ", Song= "High Time", TimePlayed= new DateTime(1990,1,1)},
+                new RadioTrack{ Key=4, Artist= "Dawg Yawp", Song= "Can't Think", TimePlayed= new DateTime(2010,1,1)},
+                new RadioTrack{ Key=5, Artist= "Dawg Yawp", Song= "City of Angels ", TimePlayed= new DateTime(2010,1,1)},
+                new RadioTrack{ Key=6, Artist= "The Head and the Heart", Song= "how long until someday", TimePlayed= new DateTime(2010,1,1)},
+                new RadioTrack{ Key=7, Artist= "sonny knight and the lakers", Song= "Flow with It ", TimePlayed= new DateTime(2010,1,1) },
             };
         }
 

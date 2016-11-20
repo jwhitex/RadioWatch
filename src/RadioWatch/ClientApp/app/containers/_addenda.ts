@@ -4,14 +4,14 @@ export { NavMenuComponent } from './navmenu.component';
 export { PlayListComponent } from './tracks/playlist.component';
 export { TrackListComponent } from './tracks/tracklist.component';
 export { 
-    PhalanxGridLogicComponent, 
+    PhalanxGridComponent, 
     PhalanxGridUiComponent, 
-    PhalanxGridViewComponent,
+    PhalanxGridExampleComponent,
     PhalanxGridBlockComponent
 } from './grid'
 export { 
-    PhalanxRemoteGridLogicComponent, 
+    PhalanxRemoteGridComponent, 
     PhalanxRemoteGridUiComponent, 
-    PhalanxRemoteGridViewComponent,
+    PhalanxRemoteGridExampleComponent,
     PhalanxRemoteGridBlockComponent
 } from './grid-remote'

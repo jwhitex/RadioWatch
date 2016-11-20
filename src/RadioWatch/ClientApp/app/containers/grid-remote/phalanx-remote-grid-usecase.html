@@ -1,0 +1,32 @@
+<h3>WUTC Evening Music</h3>
+<hr />
+<div class="container-fluid">
+    <form class="col-xs-12" (submit)="onSubmit()" #nprQueryForm="ngForm">
+        <div class="form-group col-xs-4">
+            <label for="queryDate">Date</label>
+            <input class="form-control"
+            required 
+            [(ngModel)]="searchFormModel.queryDate"
+            name="queryDate"
+            type="date"
+            id="queryDate"
+            #queryDate="ngModel" />
+        </div>
+        <div class="form-group col-xs-4">
+            <label for="queryTerm">Search</label>
+            <input class="form-control"
+            [(ngModel)]="searchFormModel.queryTerm"
+            name="queryTerm"
+            type="text"
+            id="queryTerm"
+            placeholder="search..."
+            #queryTerm="ngModel" />
+        </div>
+        <button [disabled]="!nprQueryForm.form.valid" type="submit" class="btn btn-primary">
+            {{mode}}
+        </button>
+    </form>
+</div>
+
+<phx-remote-grid [init]='init' [dataSourceChanged]='dataSource$' [dataGetter]='dataGetter'>
+</phx-remote-grid>

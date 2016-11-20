@@ -57,7 +57,7 @@ export class TrackListComponent implements OnInit {
         };
         const date = this.getDateAsStringQuery(clientDate);
         this.searchFormModel.queryDate = date;
-        this.dataSource = "https://api.composer.nprstations.org/v1/widget/" + `${this.initialKey}/playlist?t=${curretTicks}&prog_id=${this.program_id}&datestamp=${date}&order=1&time=00%3A30&errorMsg=No+results+found.+Please+modify+your+search+and+try+again.`;
+        this.dataSource = "https://api.composer.nprstations.org/v1/widget/" + `${this.initialKey}/playlist?t=${curretTicks}&prog_id=${this.program_id}&datestamp=${date}&order=1&errorMsg=No+results+found.+Please+modify+your+search+and+try+again.`;
     }
     
     ngOnInit(): void {
@@ -110,7 +110,7 @@ export class TrackListComponent implements OnInit {
       
     searchDate(date: string) {
         const curretTicks = (new Date).getTime();
-        this.dataSource = "https://api.composer.nprstations.org/v1/widget/" + `${this.initialKey}/playlist?t=${curretTicks}&prog_id=${this.program_id}&datestamp=${date}&order=1&time=00%3A30&errorMsg=No+results+found.+Please+modify+your+search+and+try+again.`;
+        this.dataSource = "https://api.composer.nprstations.org/v1/widget/" + `${this.initialKey}/playlist?t=${curretTicks}&prog_id=${this.program_id}&datestamp=${date}&order=1&errorMsg=No+results+found.+Please+modify+your+search+and+try+again.`;
         this.gridComponent.bindDataSource(this.dataSource).subscribe(() => this.submitted = true);
     }
 

@@ -4,7 +4,9 @@ import { PHX_REMOTE_GRID_ACTIONS } from '../actions/phalanxremotegrid.actions';
 
 export interface IPhxRmtGridState {
     id: string;
+    response: Object;
     data: List<IPhxRmtGridItemState>;
+    displayData: List<IPhxRmtGridItemState>;
     page: number;
     pageSize: number;
     sort: string;
@@ -14,7 +16,7 @@ export interface IPhxRmtGridState {
     //display properties...
     paginationWidth: string;
     paginationButtonColors: List<IPhxRmtGridPaginationState>;
-
+    dataSource: string;
     //initial settings...
     setting: IPhxRmtGridSettingState
 }
@@ -24,7 +26,6 @@ export interface IPhxRmtGridSettingState {
     allowSorting: boolean;
     columns: List<IPhxRmtGridColumnState>;
     initialPage: number;
-    dataSource: string;
 }
 
 export interface IPhxRmtGridColumnState {
@@ -46,7 +47,9 @@ export interface IPhxRmtGridItemState {
 
 const INIT_STATE: IPhxRmtGridState = {
     id: '',
+    response: {},
     data: List<IPhxRmtGridItemState>([]),
+    displayData: List<IPhxRmtGridItemState>([]),
     page: 0,
     pageSize: 10,
     sort: '',
@@ -55,12 +58,12 @@ const INIT_STATE: IPhxRmtGridState = {
     pages: List<number>([]),
     paginationWidth: '',
     paginationButtonColors: List<IPhxRmtGridPaginationState>([]),
+    dataSource: '',
     setting: {       
         allowDelete: false,
         allowSorting: false,
         columns: List<IPhxRmtGridColumnState>([]),
         initialPage: 0,
-        dataSource: ''
     }
 }
 
@@ -78,21 +81,25 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                     allowDelete: ap.allowDelete,
                     allowSorting: ap.allowSorting,
                     initialPage: ap.initialPage,
-                    dataSource: ap.dataSource,
                     columns: List<IPhxRmtGridColumnState>(ap.columns)
                 })
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_PENDING:
             return tassign(state, {
+                dataSource: ap.dataSource,
                 page: ap.page,
                 pageSize: ap.pageSize,
                 sort: ap.sort,
                 by: ap.by
             });
-        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS:
-        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_SUCCESS:
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS:
+        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_SUCCESS:
             return tassign(state, {
+                displayData: List<IPhxRmtGridItemState>(ap)
+            });
+        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS:
+            return tassign(state, {
+                response: ap.response,
                 totalRows: ap.total,
                 data: List<IPhxRmtGridItemState>(ap.data.map((x) => Object.assign({},{ data: x })))
             });

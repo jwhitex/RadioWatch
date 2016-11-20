@@ -10,8 +10,8 @@ import {
     HomeComponent,
     PlayListComponent,
     TrackListComponent,
-    PhalanxGridViewComponent,
-    PhalanxRemoteGridViewComponent
+    PhalanxGridExampleComponent,
+    PhalanxRemoteGridExampleComponent
 } from './containers/_addenda';
 
 import { containerDeclarations } from './app.declarations';
@@ -41,8 +41,8 @@ import { NgReduxModule } from 'ng2-redux';
             { path: 'home', component: HomeComponent },
             { path: 'playlist', component: PlayListComponent },
             { path: 'tracklist', component: TrackListComponent },
-            { path: 'gridview', component: PhalanxGridViewComponent },
-            { path: 'rmtgridview', component: PhalanxRemoteGridViewComponent },
+            { path: 'gridview', component: PhalanxGridExampleComponent },
+            { path: 'rmtgridview', component: PhalanxRemoteGridExampleComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

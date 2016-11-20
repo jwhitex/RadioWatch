@@ -13,19 +13,24 @@ export const PHX_REMOTE_GRID_ACTIONS = {
     PHX_REMOTE_GRID_READ_ERROR: 'PHX_REMOTE_GRID_READ_ERROR',
     PHX_REMOTE_GRID_SORT_PENDING: 'PHX_REMOTE_GRID_SORT_PENDING',
     PHX_REMOTE_GRID_SORT_SUCCESS: 'PHX_REMOTE_GRID_SORT_SUCCESS',
-    PHX_REMOTE_GRID_SORT_ERROR: 'PHX_REMOTE_GRID_SORT_ERROR',
     PHX_REMOTE_GRID_PAGE_CHANGE_PENDING: 'PHX_REMOTE_GRID_PAGE_CHANGE_PENDING',
     PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS: 'PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS',
-    PHX_REMOTE_GRID_PAGE_CHANGE_ERROR: 'PHX_REMOTE_GRID_PAGE_CHANGE_ERROR',
     PHX_REMOTE_GRID_UI_PAGINATION_UPDATED: 'PHX_REMOTE_GRID_UI_PAGINATION_UPDATED',
 }
+
+export interface GridDataGetter {
+    (object: any): [any, number];
+}
+export interface GridDataSourceBuilder {
+    (object?: any): string;
+}
+
 
 @Injectable()
 export class PhxRmtGridActions {
     constructor(private ngRedux: NgRedux<IAppState>, private api: ApiService) {
     }
 
-    //?? has to do with render..ui state?
     phxGridInitialize(init: IPhxRmtGridInit) {
         this.ngRedux.dispatch({
             type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_INITIALIZE_PENDING,
@@ -37,26 +42,39 @@ export class PhxRmtGridActions {
         });
     }
 
-    phxGridRead(request: IPhxRmtGridRequest) {
+    phxGridRead(request: IPhxRmtGridRequest, gridDataGetter: GridDataGetter) {
         this.ngRedux.dispatch({
             type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_PENDING,
             payload: request
         });
 
-        this.api.get(this.calcUriFromStore())
-            .do(res => this.ngRedux.dispatch({
-                type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS,
-                payload: {
-                    total: res.total,
-                    data: res.data
-                }
-            }))
-            .do(() => this.phxGridUpdatePagination())
-            .catch(() => this.ngRedux.dispatch({
-                type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR
-            })).subscribe();
+        //todo: optimize calls..
+        //let callRequired = this.isApiCallRequired(request.dataSource);
+        this.api.getExternal(request.dataSource)
+            .do(res => {
+                let [gridData, total] = gridDataGetter(res);
+                this.ngRedux.dispatch({
+                    type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS,
+                    payload: {
+                        response: res,
+                        data: gridData,
+                        total: total,
+                    }
+                });
+            })
+            .do(() =>
+                this.ngRedux.dispatch({
+                    type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS,
+                    payload: this.phxGridApplyPagingOnData()  
+                }))
+            .do(() =>
+                this.phxGridUpdatePagination())
+            .catch(() =>
+                this.ngRedux.dispatch({
+                    type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR
+                }))
+            .subscribe();
     }
-
 
     phxGridSort(descriptor: IPhxRmtGridSortDescriptor) {
         this.ngRedux.dispatch({
@@ -64,18 +82,10 @@ export class PhxRmtGridActions {
             payload: descriptor
         });
 
-        this.api.get(this.calcUriFromStore())
-            .do(res => this.ngRedux.dispatch({
-                type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_SUCCESS,
-                payload: {
-                    total: res.total,
-                    data: res.data
-                }
-            }))
-            .do(() => this.phxGridUpdatePagination())
-            .catch(() => this.ngRedux.dispatch({
-                type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_ERROR
-            })).subscribe();
+        this.ngRedux.dispatch({
+            type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_SUCCESS,
+            payload: this.phxGridApplySortingOnData()
+        });
     }
 
     phxGridPageChange(page: number) {
@@ -85,19 +95,42 @@ export class PhxRmtGridActions {
                 page: page
             }
         });
+        this.ngRedux.dispatch({
+            type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS,
+            payload: this.phxGridApplyPagingOnData()
+        });
 
-        this.api.get(this.calcUriFromStore())
-            .do(res => this.ngRedux.dispatch({
-                type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS,
-                payload: {
-                    total: res.total,
-                    data: res.data
-                }
-            }))
-            .do(() => this.phxGridUpdatePagination())
-            .catch(() => this.ngRedux.dispatch({
-                type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_ERROR
-            })).subscribe();
+        this.phxGridUpdatePagination();
+    }
+
+
+    private phxGridApplyPagingOnData(data?: any, state?: any): any {
+        if (!data){
+            if (!state)
+                state = this.ngRedux.getState();
+            data = state.phxRmtGrid.data
+        }
+        const skip = state.phxRmtGrid.pageSize * (state.phxRmtGrid.page);
+        return data.slice(skip, skip + state.phxRmtGrid.pageSize)
+    }
+
+    private phxGridApplySortingOnData(): any {
+        const state = this.ngRedux.getState();
+        const data = List(state.phxRmtGrid.data);
+        const sort = state.phxRmtGrid.sort;
+        const by = state.phxRmtGrid.by;
+        const sortedData = data.sort((a, b) => {
+            console.log(a);
+            console.log(b);
+            if (a.data[sort] > b.data[sort]) {
+                return 1 * by;
+            }
+            if (a.data[sort] < b.data[sort]) {
+                return -1 * by;
+            }
+            return 0;
+        });
+        return this.phxGridApplyPagingOnData(sortedData, state);
     }
 
     private phxGridUpdatePagination() {
@@ -129,16 +162,6 @@ export class PhxRmtGridActions {
         const totalPages: any = Math.ceil(total / pageSize) + 1;
         return ((totalPages * 80) + pageSize * 3) + "px";
     }
-
-
-    private calcUriFromStore(): string {
-        const state = this.ngRedux.getState();
-        let uri = state.phxRmtGrid.setting.dataSource + `?page=${state.phxRmtGrid.page}&pageSize=${state.phxRmtGrid.pageSize}`;
-        if (state.phxRmtGrid.sort && state.phxRmtGrid.by) {
-            uri += `&sort=${state.phxRmtGrid.sort}&by=${state.phxRmtGrid.by}`;
-        }
-        return uri;
-    }
 }
 
 //use these in view..
@@ -148,7 +171,6 @@ export interface IPhxRmtGridInit {
     allowDelete: boolean;
     allowSorting: boolean;
     initialPage: number;
-    dataSource: string;
     columns: List<IPhxRmtGridInitColumn>;
 }
 
@@ -161,6 +183,7 @@ export interface IPhxRmtGridInitColumn {
 }
 
 export interface IPhxRmtGridRequest {
+    dataSource: string;
     pageSize: number;
     page: number;
     sort: string;
