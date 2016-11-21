@@ -3,6 +3,7 @@ import { IAppState } from '../store';
 import { NgRedux } from 'ng2-redux';
 import { List } from 'immutable';
 import { ApiService } from '../services/global/_addenda'
+import { Observable } from 'rxjs';
 
 export const PHX_REMOTE_GRID_ACTIONS = {
     PHX_REMOTE_GRID_INITIALIZE_PENDING: 'PHX_REMOTE_GRID_INITIALIZE_PENDING',
@@ -42,7 +43,7 @@ export class PhxRmtGridActions {
         });
     }
 
-    phxGridRead(request: IPhxRmtGridRequest, gridDataGetter: GridDataGetter) {
+    phxGridRead(request: IPhxRmtGridRequest, dataExtractionDevice: Observable<any>) {
         this.ngRedux.dispatch({
             type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_PENDING,
             payload: request
@@ -52,13 +53,19 @@ export class PhxRmtGridActions {
         //let callRequired = this.isApiCallRequired(request.dataSource);
         this.api.getExternal(request.dataSource)
             .do(res => {
-                let [gridData, total] = gridDataGetter(res);
+                let [gData, totalR] = [[], 0];
+                const subscription = dataExtractionDevice.subscribe((next) => {
+                    [gData, totalR] = next(res);
+                }, (err) => {
+                    console.log(err);
+                }, () => {});
+                subscription.unsubscribe();
                 this.ngRedux.dispatch({
                     type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS,
                     payload: {
                         response: res,
-                        data: gridData,
-                        total: total,
+                        data: gData,
+                        total: totalR,
                     }
                 });
             })

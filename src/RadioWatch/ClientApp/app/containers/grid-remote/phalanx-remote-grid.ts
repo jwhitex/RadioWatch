@@ -36,9 +36,9 @@ import { AsyncPipe } from '@angular/common';
 })
 export class PhalanxRemoteGridComponent implements OnInit {
     @Input() init: IPhxRmtGridInit;
-    @Input() dataGetter: GridDataGetter; //should probably be obserbable
     @Input() dataSourceChanged: BehaviorSubject<any>;
-    
+    @Input() dataExtractionDevice: Observable<any>;
+
     @select(['phxRmtGrid', 'displayData']) displayData$: Observable<List<IPhxRmtGridItemState>>;
     @select(['phxRmtGrid', 'setting']) setting$: Observable<IPhxRmtGridSettingState>;
     @select(['phxRmtGrid', 'paginationButtonColors']) paginationButtonColors$: Observable<List<IPhxRmtGridPaginationState>>;
@@ -62,7 +62,7 @@ export class PhalanxRemoteGridComponent implements OnInit {
                 page: 0,
                 sort: null,
                 by: 1
-            }, this.dataGetter)
+            }, this.dataExtractionDevice)
         });
     }
 

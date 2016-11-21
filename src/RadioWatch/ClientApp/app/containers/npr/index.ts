@@ -1,0 +1,1 @@
+export { PhalanxRemoteNprGridComponent } from './npr-remote-grid'

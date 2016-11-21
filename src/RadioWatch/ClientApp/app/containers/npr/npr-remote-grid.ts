@@ -4,15 +4,25 @@ import { List } from 'immutable';
 import { BehaviorSubject, Observable, Observer } from 'rxjs';
 
 @Component({
-    selector: 'phx-remote-grid-vc',
-    template: require('./phalanx-remote-grid-usecase.html')
+    selector: 'npr-remote-grid',
+    template: require('./npr-remote-grid.html')
 })
-export class PhalanxRemoteGridExampleComponent implements OnInit {
+export class PhalanxRemoteNprGridComponent implements OnInit {
     constructor() {
         this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(null));
+        this.dataGetter$ = new Observable((observer) => {
+            try {
+                observer.next(this.dataExtractionProc);
+                observer.complete();
+            } catch(error) {
+                observer.error(error);
+            }
+        });
     }
     dataSource$: BehaviorSubject<string>;
-    dataGetter = (x: any): [any, number] => {
+    dataGetter$: Observable<any>;
+
+    dataExtractionProc = (x: any): [any, number] => {
         const noNan = (x) => typeof x !== "undefined" && x;
         const propTree = [
             "playlist",
