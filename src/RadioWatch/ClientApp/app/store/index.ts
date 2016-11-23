@@ -2,16 +2,18 @@ import {combineReducers} from 'redux';
 const persistState = require('redux-localstorage');
 import { phxGridReducer, IPhxGridState } from './phxgrid.reducer'
 import { phxRmtGridReducer, IPhxRmtGridState } from './phxrmtgrid.reducer'
-
+import { youtubeWindowsReducer, IYoutubeWindowsState } from './youtube-window-reducer';
 
 export class IAppState {
     phxGrid?: IPhxGridState;
     phxRmtGrid?: IPhxRmtGridState;
+    youtubeWindows?: IYoutubeWindowsState 
 }
 
 export const rootReducer = combineReducers<IAppState>({
     phxGrid: phxGridReducer,
-    phxRmtGrid: phxRmtGridReducer
+    phxRmtGrid: phxRmtGridReducer,
+    youtubeWindows: youtubeWindowsReducer
 });
 
 
@@ -36,3 +38,8 @@ export {
     IPhxRmtGridPaginationState,
     IPhxRmtGridSettingState
 } from './phxrmtgrid.reducer';
+
+export {
+    IYoutubeWindowsState,
+    IYoutubeWindowState
+} from './youtube-window-reducer';

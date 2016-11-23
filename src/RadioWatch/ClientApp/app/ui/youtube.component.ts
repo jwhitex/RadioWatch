@@ -1,5 +1,5 @@
 ﻿import { Component, AfterViewInit, OnInit, Input } from '@angular/core';
-import { YoutubeService } from '../services/local/_addenda';
+import { YoutubeOldService } from '../services/local/_addenda';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
@@ -8,7 +8,7 @@ import 'rxjs/add/operator/map';
     selector: 'youtube',
     template: require('./youtube.component.html'),
     styles: [require('./youtube.component.css')],
-    providers: [YoutubeService]
+    providers: [YoutubeOldService]
 })
 export class YoutubeComponent implements OnInit, AfterViewInit {
 
@@ -19,7 +19,7 @@ export class YoutubeComponent implements OnInit, AfterViewInit {
     googleToken: string = '';
     searchResults: any = [];
     onPlaying: boolean = false;
-    constructor(public http: Http, public ytPlayer: YoutubeService) {
+    constructor(public http: Http, public ytPlayer: YoutubeOldService) {
     }
 
     currentlyLoaded: any;

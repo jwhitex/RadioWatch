@@ -14,7 +14,7 @@ export interface IYoutubeEmbed {
 
 
 @Injectable()
-export class YoutubeService {
+export class YoutubeOldService {
 
     youtubeEmbeds: IYoutubeEmbed[] = [];
 

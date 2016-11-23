@@ -14,3 +14,8 @@ export {
     GridDataGetter,
     GridDataSourceBuilder
 } from './phalanxremotegrid.actions';
+export {
+    YoutubeWindowActions,
+    IYoutubeSearchResponse,
+    IYoutubeSearch
+} from './youtube-window-actions';

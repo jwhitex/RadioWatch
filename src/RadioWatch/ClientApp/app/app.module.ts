@@ -11,9 +11,9 @@ import {
     PlayListComponent,
     TrackListComponent,
     PhalanxGridExampleComponent,
-    PhalanxRemoteNprGridComponent
+    PhalanxRemoteNprGridComponent,
+    TestDisplayComponent
 } from './containers/_addenda';
-
 import { containerDeclarations } from './app.declarations';
 import {
     PhalanxGridComponent,
@@ -39,7 +39,7 @@ import { NgReduxModule } from 'ng2-redux';
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
-            { path: 'playlist', component: PlayListComponent },
+            { path: 'playlist', component: TestDisplayComponent },
             { path: 'tracklist', component: TrackListComponent },
             { path: 'gridview', component: PhalanxGridExampleComponent },
             { path: 'rmtgridview', component: PhalanxRemoteNprGridComponent },

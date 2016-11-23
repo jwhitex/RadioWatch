@@ -17,3 +17,13 @@ export {
 export {
     PhalanxRemoteNprGridComponent,
 } from './npr'
+export {
+    YoutubeEmbedComponent,
+    YoutubeWindowComponent
+} from './youtube'
+export {
+    YoutubeGridAdapterComponent,
+} from './grid-adapters'
+export {
+    TestDisplayComponent
+} from './display';
