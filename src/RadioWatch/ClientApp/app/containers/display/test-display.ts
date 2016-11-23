@@ -4,8 +4,8 @@ import { Component, OnInit } from '@angular/core';
     selector: 'test-display',
     template: `
     <h1>Video</h1>
-    <youtube-grid-adapter>
-    </youtube-grid-adapter>    
+    <youtube-adapter>
+    </youtube-adapter>    
     `
 })
 export class TestDisplayComponent implements OnInit {

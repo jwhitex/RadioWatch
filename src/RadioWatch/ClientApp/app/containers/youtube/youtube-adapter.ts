@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { IYoutubeSearch } from '../../actions';
 
 @Component({
-    selector: 'youtube-grid-adapter',
+    selector: 'youtube-adapter',
     template: `
     <youtube-window
     [searchParams]='searchTerm$'
@@ -12,7 +12,7 @@ import { IYoutubeSearch } from '../../actions';
     </youtube-window>
     `
 })
-export class YoutubeGridAdapterComponent {
+export class YoutubeAdapterComponent {
     constructor() { }
 
     @Input() playerId: string = "wukong_bat";
@@ -21,7 +21,7 @@ export class YoutubeGridAdapterComponent {
         return {
             searchTerm: this.searchTerm,
             pageToken: null,
-            googleToken: 'AIzaSyBefQBMHX7xaIOKDLxCi4cG0XT_BJFSuJA',
+            googleToken: '',
             maxResults: 1
         } as IYoutubeSearch;
     }

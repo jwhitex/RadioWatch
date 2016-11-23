@@ -7,7 +7,7 @@ import { youtubeWindowsReducer, IYoutubeWindowsState } from './youtube-window-re
 export class IAppState {
     phxGrid?: IPhxGridState;
     phxRmtGrid?: IPhxRmtGridState;
-    youtubeWindows?: IYoutubeWindowsState 
+    youtubeWindows?: IYoutubeWindowsState;
 }
 
 export const rootReducer = combineReducers<IAppState>({

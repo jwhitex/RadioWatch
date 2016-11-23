@@ -1,6 +1,7 @@
 import { Http } from '@angular/http';
 import { Injectable, NgZone, Inject } from '@angular/core';
-import { WindowRefService, DocumentRefService } from './global/_addenda';
+import { WindowRefService } from './window-ref.service';
+import { DocumentRefService } from './document-ref.service';
 
 @Injectable()
 export class YoutubeService {

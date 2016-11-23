@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IAppState } from '../store';
 import { NgRedux } from 'ng2-redux';
 import { List } from 'immutable';
-import { ApiService } from '../services/global/_addenda'
+import { ApiService } from '../services'
 import { Observable } from 'rxjs';
 import { YoutubeService } from '../services';
 

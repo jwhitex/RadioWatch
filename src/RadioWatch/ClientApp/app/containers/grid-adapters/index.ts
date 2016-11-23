@@ -1,1 +1,0 @@
-export { YoutubeGridAdapterComponent } from './youtube-grid-adapter';

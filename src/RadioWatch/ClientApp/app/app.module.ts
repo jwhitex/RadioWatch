@@ -8,29 +8,17 @@ import {
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    PlayListComponent,
-    TrackListComponent,
     PhalanxGridExampleComponent,
     PhalanxRemoteNprGridComponent,
     TestDisplayComponent
-} from './containers/_addenda';
+} from './containers';
 import { containerDeclarations } from './app.declarations';
-import {
-    PhalanxGridComponent,
-    PhalanxGridColumnComponent,
-    PhalanxGridColumnVideoComponent,
-    YoutubeComponent
-} from './ui/_addenda';
 import { NgReduxModule } from 'ng2-redux';
 
 @NgModule({
     bootstrap: [ AppComponent ],
     declarations: [
         ...containerDeclarations,
-        PhalanxGridComponent,
-        PhalanxGridColumnComponent,
-        PhalanxGridColumnVideoComponent,
-        YoutubeComponent
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
@@ -40,7 +28,6 @@ import { NgReduxModule } from 'ng2-redux';
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
             { path: 'playlist', component: TestDisplayComponent },
-            { path: 'tracklist', component: TrackListComponent },
             { path: 'gridview', component: PhalanxGridExampleComponent },
             { path: 'rmtgridview', component: PhalanxRemoteNprGridComponent },
             { path: '**', redirectTo: 'home' }

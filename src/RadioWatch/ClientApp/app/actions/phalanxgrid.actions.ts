@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { IAppState } from '../store';
 import { NgRedux } from 'ng2-redux';
 import { List } from 'immutable';
-import { ApiService } from '../services/global/_addenda'
+import { ApiService } from '../services'
 
 export const PHX_GRID_ACTIONS = {
     PHX_GRID_INITIALIZE_PENDING: 'PHX_GRID_INITIALIZE_PENDING',

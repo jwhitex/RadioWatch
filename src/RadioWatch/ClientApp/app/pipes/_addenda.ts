@@ -1,1 +1,0 @@
-﻿export { AutoGridSortPipe } from "./auto-grid-sort.pipe";
