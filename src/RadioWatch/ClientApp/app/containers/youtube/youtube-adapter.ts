@@ -13,17 +13,20 @@ import { IYoutubeSearch } from '../../actions';
     `
 })
 export class YoutubeAdapterComponent {
-    constructor() { }
-
+    searchTerm$: BehaviorSubject<IYoutubeSearch>;
+    sub: any;
+    constructor() {
+        let search = () => {
+            return {
+                searchTerm: this.searchTerm,
+                pageToken: null,
+                googleToken: 'AIzaSyBefQBMHX7xaIOKDLxCi4cG0XT_BJFSuJA',
+                maxResults: 1
+            } as IYoutubeSearch;
+        }
+        this.searchTerm$ = new BehaviorSubject(search());
+    }
     @Input() playerId: string = "wukong_bat";
     @Input() searchTerm: string = "rick and morty everyone dies";
-    search = () => {
-        return {
-            searchTerm: this.searchTerm,
-            pageToken: null,
-            googleToken: '',
-            maxResults: 1
-        } as IYoutubeSearch;
-    }
-    searchTerm$: BehaviorSubject<IYoutubeSearch> = new BehaviorSubject(this.search());
+
 }

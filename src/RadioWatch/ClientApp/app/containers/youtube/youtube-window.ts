@@ -8,7 +8,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'youtube-window',
-    providers: [AsyncPipe],
+    providers: [AsyncPipe, YoutubeWindowActions],
     template: `
     <youtube-embed
     [playerId]='playerId'
@@ -17,8 +17,9 @@ import { AsyncPipe } from '@angular/common';
     </youtube-embed>
     `
 })
-export class YoutubeWindowComponent implements OnInit, OnDestroy {
-    constructor(private ngRedux: NgRedux<IAppState>, private youtubeActions: YoutubeWindowActions) { }
+export class YoutubeWindowComponent implements OnInit, AfterViewInit, OnDestroy {
+    constructor(private ngRedux: NgRedux<IAppState>, private youtubeActions: YoutubeWindowActions) {
+    }
 
     @Input() searchParams: BehaviorSubject<IYoutubeSearch>;
     @Input() playerId: string;
@@ -81,17 +82,23 @@ export class YoutubeWindowComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        debugger;
-        this.youtubeActions.addYoutubeWindow(this.playerId);
-        this.playerWindow$ = this.ngRedux.select<IYoutubeWindowState>((state) => {
-            return state.youtubeWindows.playerWindows.filter((value, key) => value.playerId === this.playerId).first();
-        });
+        //bug where this is called twice if page is refreshed?
+        //https://github.com/ngrx/store/issues/265
+        //https://github.com/angular/angular/issues/6782
+        if (this.playerWindow$ == null) {
+            debugger;
+            this.youtubeActions.addYoutubeWindow(this.playerId);
+            this.playerWindow$ = this.ngRedux.select<IYoutubeWindowState>((state) => {
+                return state.youtubeWindows.playerWindows.filter((value, key) => value.playerId === this.playerId).first();
+            });
+            this.searchParams.subscribe((next) => {
+                this.youtubeActions.searchYoutube(this.playerId, this.urlBuilder(next), this.dataExtractor$);
+            });
+        }
     }
 
     ngAfterViewInit() {
-        this.searchParams.subscribe((next) => {
-            this.youtubeActions.searchYoutube(this.playerId, this.urlBuilder(next), this.dataExtractor$);
-        });
+        this.youtubeActions.initYoutubeWindow(this.playerId);
     }
 
     ngOnDestroy() {

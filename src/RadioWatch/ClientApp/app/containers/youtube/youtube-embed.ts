@@ -1,36 +1,25 @@
-import { Component, OnInit, Input, AfterViewInit, ChangeDetectionStrategy } from '@angular/core';
-import { YoutubeWindowActions, IYoutubeSearch  } from '../../actions';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { YoutubeWindowActions  } from '../../actions';
 import { IYoutubeWindowState } from '../../store';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
     selector: 'youtube-embed',
     template: require('./youtube-embed.html'),
     styles: [require('./youtube-embed.css')],
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class YoutubeEmbedComponent implements OnInit, AfterViewInit {
+export class YoutubeEmbedComponent {
     constructor(private youtubeActions: YoutubeWindowActions) { }
-
-    //todo: try getting off of window..
+    
     @Input() playerId: string = "youtube_embed_placeholder";
-    @Input() playerWindow: IYoutubeWindowState; 
-   
-    ngOnInit() {
-       //could emit instead of call directly...
-        //this.youtubeActions.initYoutubeWindow(this.playerId);
-    }
-
-    ngAfterViewInit(){
-        debugger;
-        this.youtubeActions.initYoutubeWindow(this.playerId);
-    }
+    @Input() playerWindow: IYoutubeWindowState;  
 
     play(e){
         this.youtubeActions.startVideo(this.playerId);
     }
 
     stop(){
-        // attach to player status?
+        //get attached to youtube video..
+        this.youtubeActions.stopVideo(this.playerId);
     }
 }

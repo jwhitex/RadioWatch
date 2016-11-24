@@ -27,8 +27,10 @@ export class YoutubeService {
         }
     }
 
-    canSetup() {
-        if (typeof this.windowRef.nativeWindow !== "undefined") {
+    isYtDefined(): boolean {
+        if (typeof this.windowRef.nativeWindow !== "undefined"
+            && typeof this.windowRef.nativeWindow.YT !== "undefined"
+            && typeof this.windowRef.nativeWindow.YT.Player !== "undefined") {
             this.window = this.windowRef.nativeWindow;
             return true;
         } else {
@@ -56,7 +58,7 @@ export class YoutubeService {
                 return;
             }
         };
-        if (this.window.YT && this.window.YT.Player) {
+        if (this.window['YT'] && this.window.YT.Player) {
             console.log('Youtube API is ready');
             return;
         }

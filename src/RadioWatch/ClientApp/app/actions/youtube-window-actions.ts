@@ -26,17 +26,17 @@ export class YoutubeWindowActions {
     constructor(private ngRedux: NgRedux<IAppState>, private api: ApiService, private ytService: YoutubeService) {
     }
 
-    addYoutubeWindow(playerId: string){
+    addYoutubeWindow(playerId: string) {
         this.ngRedux.dispatch({
             type: YOUTUBE_WINDOWS_ACTIONS.ADD_WINDOW,
-            payload: playerId                        
+            payload: playerId
         });
     }
 
-    removeYoutubeWindow(playerId: string){
+    removeYoutubeWindow(playerId: string) {
         this.ngRedux.dispatch({
             type: YOUTUBE_WINDOWS_ACTIONS.REMOVE_WINDOW,
-            payload: playerId                        
+            payload: playerId
         });
     }
 
@@ -60,7 +60,7 @@ export class YoutubeWindowActions {
                     videoTitle: videoData.videoTitle,
                     imgUrl: videoData.imgUrl,
                     videos: videoData.videos,
-                    apiResponse: videoData.apiResponse,  
+                    apiResponse: videoData.apiResponse,
                 }
             });
         }).catch(() =>
@@ -70,17 +70,17 @@ export class YoutubeWindowActions {
     }
 
     initYoutubeWindow(playerId: string) {
-        if (this.ytService.canSetup()){
+        if (this.ytService.isYtDefined()) {
             this.loadPlayer(playerId);
         }
     }
 
-    private loadPlayer(playerId: string){
+    private loadPlayer(playerId: string) {
         this.ytService.setupPlayer(playerId);
         const playerWindow = this.windowById(playerId);
         if (playerWindow.player) {
             playerWindow.player.destroy();
-        }     
+        }
         let newPlayer = this.ytService.createPlayer(playerWindow.playerId, playerWindow.playerHeight, playerWindow.playerWidth);
         this.ngRedux.dispatch({
             type: YOUTUBE_WINDOW_ACTIONS.PLAYER_LOADED,
@@ -94,13 +94,24 @@ export class YoutubeWindowActions {
 
     startVideo(playerId: string) {
         const window = this.windowById(playerId);
-        this.ytService.launchPlayer(window.videoId, window.player);
-        this.ngRedux.dispatch({
-            type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STARTED,
-            payload: {
-                playerId: playerId,
-                playing: true
+        //todo..this will result in not playing video first time...
+        var promise = new Promise((resolve, reject) => {
+            if (this.ytService.isYtDefined() && window.player) {
+                resolve();
+            } else {
+                reject();
             }
+        }).then((val) => {
+            this.ytService.launchPlayer(window.videoId, window.player);
+            this.ngRedux.dispatch({
+                type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STARTED,
+                payload: {
+                    playerId: playerId,
+                    playing: true
+                }
+            });
+        }).catch(() => {
+            this.initYoutubeWindow(playerId);
         });
     }
 
@@ -117,8 +128,8 @@ export class YoutubeWindowActions {
 
     private windowById(playerId: string) {
         const state = this.ngRedux.getState();
-        const playerWindow = state.youtubeWindows.playerWindows.filter((value,key) => value.playerId === playerId).first();
-        if (typeof playerWindow === "undefined" || !playerWindow){
+        const playerWindow = state.youtubeWindows.playerWindows.filter((value, key) => value.playerId === playerId).first();
+        if (typeof playerWindow === "undefined" || !playerWindow) {
             console.log("NO PLAYER WINDOW..")
         } else {
             return playerWindow;
@@ -127,7 +138,7 @@ export class YoutubeWindowActions {
 
 }
 
-export interface IYoutubeSearch{
+export interface IYoutubeSearch {
     pageToken: string;
     googleToken: string;
     searchTerm: string;
