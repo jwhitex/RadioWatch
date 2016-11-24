@@ -14,7 +14,6 @@ export interface IPhxGridState {
     //display properties...
     paginationWidth: string;
     paginationButtonColors: List<IPhxGridPaginationState>;
-
     //initial settings...
     setting: IPhxGridSettingState
 }
@@ -32,7 +31,7 @@ export interface IPhxGridColumnState {
     dataName: string,
     sortable: boolean,
     visible: boolean,
-    date_pipe: string,   
+    date_pipe: string,
 }
 
 export interface IPhxGridPaginationState {
@@ -41,7 +40,9 @@ export interface IPhxGridPaginationState {
 }
 
 export interface IPhxGridItemState {
-    data: Object;
+    key?: number;
+    expanded?: boolean;
+    data: any;
 }
 
 const INIT_STATE: IPhxGridState = {
@@ -55,7 +56,7 @@ const INIT_STATE: IPhxGridState = {
     pages: List<number>([]),
     paginationWidth: '',
     paginationButtonColors: List<IPhxGridPaginationState>([]),
-    setting: {       
+    setting: {
         allowDelete: false,
         allowSorting: false,
         columns: List<IPhxGridColumnState>([]),
@@ -70,18 +71,18 @@ export function phxGridReducer(state = INIT_STATE, action): IPhxGridState {
     switch (action.type) {
         case PHX_GRID_ACTIONS.PHX_GRID_INITIALIZE_PENDING:
             return tassign(state,
-            {
-                id: ap.id,
-                pageSize: ap.pageSize,
-                setting: tassign(state.setting,
                 {
-                    allowDelete: ap.allowDelete,
-                    allowSorting: ap.allowSorting,
-                    initialPage: ap.initialPage,
-                    dataSource: ap.dataSource,
-                    columns: List<IPhxGridColumnState>(ap.columns)
-                })
-            });
+                    id: ap.id,
+                    pageSize: ap.pageSize,
+                    setting: tassign(state.setting,
+                        {
+                            allowDelete: ap.allowDelete,
+                            allowSorting: ap.allowSorting,
+                            initialPage: ap.initialPage,
+                            dataSource: ap.dataSource,
+                            columns: List<IPhxGridColumnState>(ap.columns)
+                        })
+                });
         case PHX_GRID_ACTIONS.PHX_GRID_READ_PENDING:
             return tassign(state, {
                 page: ap.page,
@@ -92,9 +93,13 @@ export function phxGridReducer(state = INIT_STATE, action): IPhxGridState {
         case PHX_GRID_ACTIONS.PHX_GRID_READ_SUCCESS:
         case PHX_GRID_ACTIONS.PHX_GRID_SORT_SUCCESS:
         case PHX_GRID_ACTIONS.PHX_GRID_PAGE_CHANGE_SUCCESS:
+            let key = -1;
             return tassign(state, {
                 totalRows: ap.total,
-                data: List<IPhxGridItemState>(ap.data.map((x) => Object.assign({},{ data: x })))
+                data: List<IPhxGridItemState>(ap.data.map((x) => {
+                    key++;
+                    return Object.assign({}, { key: key, expanded: false, data: x });
+                }))
             });
         case PHX_GRID_ACTIONS.PHX_GRID_SORT_PENDING:
             return tassign(state, {
@@ -110,6 +115,34 @@ export function phxGridReducer(state = INIT_STATE, action): IPhxGridState {
                 pages: ap.pages,
                 paginationWidth: ap.paginationWidth,
                 paginationButtonColors: ap.paginationButtonColors
+            });
+        case PHX_GRID_ACTIONS.ROW_EXPANDED:
+            let data = state.data.insert(ap.atIndexInsert, { data: { parentKeyPhalanxGrid: ap.key, isExpansionRowPhxGrid: true } });
+            return tassign(state, {
+                data: data.map((x) => {
+                    if (x.key === ap.key) {
+                        return Object.assign({}, { key: x.key, expanded: true, data: x.data });
+                    }
+                    return x;
+                })
+            });
+        case PHX_GRID_ACTIONS.ROW_COLLAPSED:
+            let indexOfParent = state.data.findIndex((value, key) => {
+                if (typeof value.data.parentKeyPhalanxGrid !== "undefined") {
+                    if (ap.key === value.data.parentKeyPhalanxGrid) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            data = state.data.remove(indexOfParent);
+            return tassign(state, {
+                data: data.map((x) => {
+                    if (x.key === ap.key) {
+                        return Object.assign({}, { key: x.key, expanded: false, data: x.data });
+                    }
+                    return x;
+                })
             });
         //todo: error actions
         default:

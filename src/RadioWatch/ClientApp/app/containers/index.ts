@@ -5,7 +5,8 @@ export {
     PhalanxGridComponent, 
     PhalanxGridUiComponent, 
     PhalanxGridExampleComponent,
-    PhalanxGridBlockComponent
+    PhalanxGridBlockComponent,
+    PhalanxGridExpansionComponent
 } from './grid'
 export { 
     PhalanxRemoteGridComponent, 

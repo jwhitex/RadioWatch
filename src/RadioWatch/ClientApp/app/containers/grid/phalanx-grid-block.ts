@@ -7,10 +7,8 @@ import { Component, OnInit, Input } from '@angular/core';
         {{value}}
     </div>`
 })
-export class PhalanxGridBlockComponent implements OnInit {
+export class PhalanxGridBlockComponent {
     constructor() { }
 
     @Input() value: any;
-
-    ngOnInit() { }
 }

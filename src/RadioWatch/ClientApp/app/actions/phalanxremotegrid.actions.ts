@@ -110,7 +110,6 @@ export class PhxRmtGridActions {
         this.phxGridUpdatePagination();
     }
 
-
     private phxGridApplyPagingOnData(data?: any, state?: any): any {
         if (!data){
             if (!state)

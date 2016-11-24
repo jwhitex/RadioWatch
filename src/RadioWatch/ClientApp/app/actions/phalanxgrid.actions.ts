@@ -18,6 +18,8 @@ export const PHX_GRID_ACTIONS = {
     PHX_GRID_PAGE_CHANGE_SUCCESS: 'PHX_GRID_PAGE_CHANGE_SUCCESS',
     PHX_GRID_PAGE_CHANGE_ERROR: 'PHX_GRID_PAGE_CHANGE_ERROR',
     PHX_GRID_UI_PAGINATION_UPDATED: 'PHX_GRID_PAGINATION_UPDATED',
+    ROW_EXPANDED: 'ROW_EXPANDED',
+    ROW_COLLAPSED: 'ROW_COLLAPSED'
 }
 
 @Injectable()
@@ -98,6 +100,27 @@ export class PhxGridActions {
             .catch(() => this.ngRedux.dispatch({
                 type: PHX_GRID_ACTIONS.PHX_GRID_PAGE_CHANGE_ERROR
             })).subscribe();
+    }
+
+    expandRow(rowInfo: any) {
+        this.ngRedux.dispatch({
+            type: PHX_GRID_ACTIONS.ROW_EXPANDED,
+            payload: {
+                key: rowInfo.row.key,
+                atIndexInsert: rowInfo.index + 1,
+            }
+        });
+        console.log(rowInfo);
+    }
+
+    collapseRow(rowInfo: any) {
+        this.ngRedux.dispatch({
+            type: PHX_GRID_ACTIONS.ROW_COLLAPSED,
+            payload: {
+                key: rowInfo.row.key,
+            }
+        });
+        console.log(rowInfo);
     }
 
     private phxGridUpdatePagination() {

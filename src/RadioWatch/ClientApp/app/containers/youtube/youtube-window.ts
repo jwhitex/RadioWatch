@@ -86,7 +86,6 @@ export class YoutubeWindowComponent implements OnInit, AfterViewInit, OnDestroy 
         //https://github.com/ngrx/store/issues/265
         //https://github.com/angular/angular/issues/6782
         if (this.playerWindow$ == null) {
-            debugger;
             this.youtubeActions.addYoutubeWindow(this.playerId);
             this.playerWindow$ = this.ngRedux.select<IYoutubeWindowState>((state) => {
                 return state.youtubeWindows.playerWindows.filter((value, key) => value.playerId === this.playerId).first();
