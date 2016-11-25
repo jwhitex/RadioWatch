@@ -11,7 +11,8 @@ export {
 export { 
     PhalanxRemoteGridComponent, 
     PhalanxRemoteGridUiComponent, 
-    PhalanxRemoteGridBlockComponent
+    PhalanxRemoteGridBlockComponent,
+    PhalanxRemoteGridExpansionComponent
 } from './grid-remote'
 export {
     PhalanxRemoteNprGridComponent,

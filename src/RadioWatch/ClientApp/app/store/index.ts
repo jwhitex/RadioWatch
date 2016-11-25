@@ -19,7 +19,7 @@ export const rootReducer = combineReducers<IAppState>({
 
 export const enhancers = [
     //dunno will figure..stores in local storage..
-    persistState('radiowatchstore', { key: 'radio/watch/' })
+    persistState('kdfkdj','kfdk/fkdjk')
 ];
 
 //reducer pojos

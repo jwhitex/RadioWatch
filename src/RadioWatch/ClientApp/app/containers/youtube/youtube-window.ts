@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NgRedux, select } from 'ng2-redux';
 import { IYoutubeSearch, YoutubeWindowActions, IYoutubeSearchResponse } from '../../actions';
 import { IAppState, IYoutubeWindowState } from '../../store';
@@ -8,7 +8,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'youtube-window',
-    providers: [AsyncPipe, YoutubeWindowActions],
+    providers: [AsyncPipe],
     template: `
     <youtube-embed
     [playerId]='playerId'
@@ -17,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
     </youtube-embed>
     `
 })
-export class YoutubeWindowComponent implements OnInit, AfterViewInit, OnDestroy {
+export class YoutubeWindowComponent implements OnInit {
     constructor(private ngRedux: NgRedux<IAppState>, private youtubeActions: YoutubeWindowActions) {
     }
 
@@ -86,7 +86,6 @@ export class YoutubeWindowComponent implements OnInit, AfterViewInit, OnDestroy 
         //https://github.com/ngrx/store/issues/265
         //https://github.com/angular/angular/issues/6782
         if (this.playerWindow$ == null) {
-            this.youtubeActions.addYoutubeWindow(this.playerId);
             this.playerWindow$ = this.ngRedux.select<IYoutubeWindowState>((state) => {
                 return state.youtubeWindows.playerWindows.filter((value, key) => value.playerId === this.playerId).first();
             });
@@ -96,11 +95,4 @@ export class YoutubeWindowComponent implements OnInit, AfterViewInit, OnDestroy 
         }
     }
 
-    ngAfterViewInit() {
-        this.youtubeActions.initYoutubeWindow(this.playerId);
-    }
-
-    ngOnDestroy() {
-        this.youtubeActions.removeYoutubeWindow(this.playerId);
-    }
 }

@@ -4,7 +4,7 @@ import { PHX_REMOTE_GRID_ACTIONS } from '../actions/phalanxremotegrid.actions';
 
 export interface IPhxRmtGridState {
     id: string;
-    response: Object;
+    response: any;
     data: List<IPhxRmtGridItemState>;
     displayData: List<IPhxRmtGridItemState>;
     page: number;
@@ -42,7 +42,9 @@ export interface IPhxRmtGridPaginationState {
 }
 
 export interface IPhxRmtGridItemState {
-    data: Object;
+    key?: number;
+    expanded?: boolean;
+    data: any;
 }
 
 const INIT_STATE: IPhxRmtGridState = {
@@ -98,10 +100,14 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                 displayData: List<IPhxRmtGridItemState>(ap)
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS:
+            let key = -1;
             return tassign(state, {
                 response: ap.response,
                 totalRows: ap.total,
-                data: List<IPhxRmtGridItemState>(ap.data.map((x) => Object.assign({},{ data: x })))
+                data: List<IPhxRmtGridItemState>(ap.data.map((x) => {
+                    key++;
+                    return Object.assign({},{key: key, expanded: false, data: x });
+                }))
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_PENDING:
             return tassign(state, {
@@ -117,6 +123,34 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                 pages: ap.pages,
                 paginationWidth: ap.paginationWidth,
                 paginationButtonColors: ap.paginationButtonColors
+            });
+        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_ROW_EXPANDED:
+            let data = state.displayData.insert(ap.atIndexInsert, { data: { parentKeyPhxRmtGrid: ap.key, isExpansionRowPhxRmtGrid: true } });
+            return tassign(state, {
+                displayData: data.map((x) => {
+                    if (x.key === ap.key) {
+                        return Object.assign({}, { key: x.key, expanded: true, data: x.data });
+                    }
+                    return x;
+                })
+            });
+        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_ROW_COLLAPSED:
+            let indexOfParent = state.displayData.findIndex((value, key) => {
+                if (typeof value.data.parentKeyPhxRmtGrid !== "undefined") {
+                    if (ap.key === value.data.parentKeyPhxRmtGrid) {
+                        return true;
+                    }
+                }
+                return false;
+            });
+            data = state.displayData.remove(indexOfParent);
+            return tassign(state, {
+                displayData: data.map((x) => {
+                    if (x.key === ap.key) {
+                        return Object.assign({}, { key: x.key, expanded: false, data: x.data });
+                    }
+                    return x;
+                })
             });
         //todo: error actions
         default:

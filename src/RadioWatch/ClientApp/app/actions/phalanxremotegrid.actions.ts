@@ -17,11 +17,10 @@ export const PHX_REMOTE_GRID_ACTIONS = {
     PHX_REMOTE_GRID_PAGE_CHANGE_PENDING: 'PHX_REMOTE_GRID_PAGE_CHANGE_PENDING',
     PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS: 'PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS',
     PHX_REMOTE_GRID_UI_PAGINATION_UPDATED: 'PHX_REMOTE_GRID_UI_PAGINATION_UPDATED',
+    PHX_REMOTE_GRID_ROW_EXPANDED: 'PHX_REMOTE_GRID_ROW_EXPANDED',
+    PHX_REMOTE_GRID_ROW_COLLAPSED: 'PHX_REMOTE_GRID_ROW_COLLAPSED'
 }
 
-export interface GridDataGetter {
-    (object: any): [any, number];
-}
 export interface GridDataSourceBuilder {
     (object?: any): string;
 }
@@ -58,7 +57,7 @@ export class PhxRmtGridActions {
                     [gData, totalR] = next(res);
                 }, (err) => {
                     console.log(err);
-                }, () => {});
+                }, () => { });
                 subscription.unsubscribe();
                 this.ngRedux.dispatch({
                     type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_SUCCESS,
@@ -72,7 +71,7 @@ export class PhxRmtGridActions {
             .do(() =>
                 this.ngRedux.dispatch({
                     type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS,
-                    payload: this.phxGridApplyPagingOnData()  
+                    payload: this.phxGridApplyPagingOnData()
                 }))
             .do(() =>
                 this.phxGridUpdatePagination())
@@ -110,8 +109,29 @@ export class PhxRmtGridActions {
         this.phxGridUpdatePagination();
     }
 
+    expandRow(rowInfo: any) {
+        this.ngRedux.dispatch({
+            type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_ROW_EXPANDED,
+            payload: {
+                key: rowInfo.row.key,
+                atIndexInsert: rowInfo.index + 1,
+            }
+        });
+        console.log(rowInfo);
+    }
+
+    collapseRow(rowInfo: any) {
+        this.ngRedux.dispatch({
+            type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_ROW_COLLAPSED,
+            payload: {
+                key: rowInfo.row.key,
+            }
+        });
+        console.log(rowInfo);
+    }
+
     private phxGridApplyPagingOnData(data?: any, state?: any): any {
-        if (!data){
+        if (!data) {
             if (!state)
                 state = this.ngRedux.getState();
             data = state.phxRmtGrid.data

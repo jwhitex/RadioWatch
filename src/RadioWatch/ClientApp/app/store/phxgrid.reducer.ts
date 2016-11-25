@@ -116,7 +116,7 @@ export function phxGridReducer(state = INIT_STATE, action): IPhxGridState {
                 paginationWidth: ap.paginationWidth,
                 paginationButtonColors: ap.paginationButtonColors
             });
-        case PHX_GRID_ACTIONS.ROW_EXPANDED:
+        case PHX_GRID_ACTIONS.PHX_GRID_ROW_EXPANDED:
             let data = state.data.insert(ap.atIndexInsert, { data: { parentKeyPhalanxGrid: ap.key, isExpansionRowPhxGrid: true } });
             return tassign(state, {
                 data: data.map((x) => {
@@ -126,7 +126,7 @@ export function phxGridReducer(state = INIT_STATE, action): IPhxGridState {
                     return x;
                 })
             });
-        case PHX_GRID_ACTIONS.ROW_COLLAPSED:
+        case PHX_GRID_ACTIONS.PHX_GRID_ROW_COLLAPSED:
             let indexOfParent = state.data.findIndex((value, key) => {
                 if (typeof value.data.parentKeyPhalanxGrid !== "undefined") {
                     if (ap.key === value.data.parentKeyPhalanxGrid) {

@@ -67,6 +67,9 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
 
 export function youtubeWindowReducer(state = INIT_STATE_WINDOW, action): IYoutubeWindowState {
     const ap = action.payload;
+    if (typeof ap === "undefined" || ap.playerId !== state.playerId){
+        return state;
+    }
     switch (action.type) {
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_SUCCESS:
             return tassign(state,

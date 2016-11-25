@@ -11,7 +11,6 @@ export {
     IPhxRmtGridInitColumn,
     IPhxRmtGridRequest,
     IPhxRmtGridSortDescriptor,
-    GridDataGetter,
     GridDataSourceBuilder
 } from './phalanxremotegrid.actions';
 export {

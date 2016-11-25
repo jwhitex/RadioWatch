@@ -18,31 +18,26 @@ export class PhalanxGridUiComponent {
     @Input() pages: List<number>
     @Input() by: number
     @Input() page: number
-       
+
     @Output() changePageEvent = new EventEmitter<number>();
     @Output() sortEvent = new EventEmitter();
     @Output() expandRowEvent = new EventEmitter();
     @Output() collapseRowEvent = new EventEmitter();
 
+    changePage(page) {
+        this.changePageEvent.emit(page);
+    }
     sort(sort, by) {
         this.sortEvent.emit({ sort: sort, by: by })
     }
 
+    expandOrCollapseRow(row, i) {
+        if (row.expanded)
+            this.collapseRowEvent.emit({ row: row, index: i });
+        else
+            this.expandRowEvent.emit({ row: row, index: i });
+    }
     deleteRow(row) {
     }
 
-    collapseRow(row,i){
-        
-    }
-
-    expandOrCollapseRow(row,i){
-        if (row.expanded)
-            this.collapseRowEvent.emit({row: row, index: i});
-        else
-            this.expandRowEvent.emit({row: row, index: i});
-    }
-
-    changePage(page) {
-        this.changePageEvent.emit(page);
-    }
 }

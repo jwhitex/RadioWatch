@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IYoutubeSearch } from '../../actions';
+import { IYoutubeSearch, YoutubeWindowActions } from '../../actions';
 
 @Component({
     selector: 'youtube-adapter',
+    providers: [YoutubeWindowActions],
     template: `
     <youtube-window
     [searchParams]='searchTerm$'
@@ -12,10 +13,11 @@ import { IYoutubeSearch } from '../../actions';
     </youtube-window>
     `
 })
-export class YoutubeAdapterComponent {
+export class YoutubeAdapterComponent implements OnDestroy {
+
     searchTerm$: BehaviorSubject<IYoutubeSearch>;
     sub: any;
-    constructor() {
+    constructor(private youtubeActions: YoutubeWindowActions) {
         let search = () => {
             return {
                 searchTerm: this.searchTerm,
@@ -25,8 +27,17 @@ export class YoutubeAdapterComponent {
             } as IYoutubeSearch;
         }
         this.searchTerm$ = new BehaviorSubject(search());
+
+        let min = 1000;
+        let max = 100000
+        const val = Math.floor(Math.random() * (max - min)) + min;
+        this.playerId = `youtubePlayerIdGen_${val}`;
+        this.youtubeActions.addYoutubeWindow(this.playerId);
     }
-    @Input() playerId: string = "wukong_bat";
+    @Input() playerId: string;
     @Input() searchTerm: string = "rick and morty everyone dies";
 
+    ngOnDestroy(){
+        this.youtubeActions.removeYoutubeWindow(this.playerId);
+    }
 }

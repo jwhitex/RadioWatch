@@ -2,7 +2,6 @@ import { Component, OnInit, Input } from '@angular/core';
 import {
     PhxRmtGridActions,
     IPhxRmtGridInit,
-    GridDataGetter,
     GridDataSourceBuilder
 } from '../../actions';
 import { select } from 'ng2-redux';
@@ -31,6 +30,8 @@ import { AsyncPipe } from '@angular/common';
     [page]='page$ | async'
     (changePageEvent)="onPageChange($event)"
     (sortEvent)="onSort($event)"
+    (expandRowEvent)="onExpandRow($event)"
+    (collapseRowEvent)="onCollapseRow($event)"
     ></phx-remote-grid-ui>
     `
 })
@@ -47,10 +48,7 @@ export class PhalanxRemoteGridComponent implements OnInit {
     @select(['phxRmtGrid', 'by']) by$: Observable<number>;
     @select(['phxRmtGrid', 'page']) page$: Observable<number>;
 
-
-
     constructor(private phxRmtGridActions: PhxRmtGridActions) {
-
     }
 
     ngOnInit() {
@@ -73,6 +71,13 @@ export class PhalanxRemoteGridComponent implements OnInit {
     onSort(sortBy) {
         this.phxRmtGridActions.phxGridSort(sortBy);
     }
+
+     onExpandRow(rowInfo){
+         this.phxRmtGridActions.expandRow(rowInfo);
+     }
+     onCollapseRow(rowInfo){
+         this.phxRmtGridActions.collapseRow(rowInfo);
+     }
 
     onDeleteRow() {
         //not implemented
