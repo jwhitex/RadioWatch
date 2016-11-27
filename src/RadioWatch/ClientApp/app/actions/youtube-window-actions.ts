@@ -3,8 +3,9 @@ import { IAppState } from '../store';
 import { NgRedux } from 'ng2-redux';
 import { List } from 'immutable';
 import { ApiService } from '../services'
-import { Observable } from 'rxjs';
+import { Observable, Subscription, Subject } from 'rxjs';
 import { YoutubeService } from '../services';
+import { YOUTUBE_PLAYER_STATES, PlayerStateModel } from '../services/youtube-service'
 
 export const YOUTUBE_WINDOW_ACTIONS = {
     SEARCHING_IN_PROG: "SEARCHING_IN_PROG",
@@ -12,7 +13,10 @@ export const YOUTUBE_WINDOW_ACTIONS = {
     SEARCHING_FAILED: "SEARCHING_FAILED",
     VIDEO_STARTED: "VIDEO_STARTED",
     VIDEO_STOPED: "VIDEO_STOPED",
-    PLAYER_LOADED: "PLAYER_LOADED"
+    PLAYER_LOADED: "PLAYER_LOADED",
+    PLAYER_STATE_CHANGE: "PLAYER_STATE_CHANGE",
+    VIDEO_CHANGED: "VIDEO_CHANGED",
+    VIDEO_CHANGED_ERROR: "VIDEO_CHANGED_ERROR"
 }
 
 export const YOUTUBE_WINDOWS_ACTIONS = {
@@ -89,7 +93,83 @@ export class YoutubeWindowActions {
                 player: newPlayer,
                 ready: true
             }
-        })
+        });
+    }
+
+    setupPlayerStateChangedEventListener(playerId: string, playerStateChanged$: Subject<PlayerStateModel>) {
+        let window = this.windowById(playerId);
+        this.ytService.setupPlayerStateChangedEventListener(playerId, window.player, playerStateChanged$);
+        return playerStateChanged$.subscribe((next) => {
+            this.playerStateChanged(next);
+        });
+    }
+
+    playerStateChanged(playerState: PlayerStateModel) {
+        let statusText: string;
+        for (let i in YOUTUBE_PLAYER_STATES) {
+            if (YOUTUBE_PLAYER_STATES[i] === playerState.statusId) {
+                statusText = i;
+            }
+        }
+        this.ngRedux.dispatch({
+            type: YOUTUBE_WINDOW_ACTIONS.PLAYER_STATE_CHANGE,
+            payload: {
+                playerId: playerState.playerId,
+                status: statusText
+            }
+        });
+        if (statusText === "ENDED" || statusText === "PAUSED") {
+            this.ngRedux.dispatch({
+                type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED,
+                payload: {
+                    playerId: playerState.playerId,
+                    playing: false
+                }
+            });
+        }
+    }
+
+    pauseVideo(playerId: string): void {
+        const playerWindow = this.windowById(playerId);
+        if (playerWindow.playing){
+            this.ytService.pauseVideo(playerWindow.player);
+        }
+    }
+
+    changeVideo(playerId: string, videoId: string, dataExtractor: Observable<any>) {
+        const playerWindow = this.windowById(playerId);
+        let videoData: any;
+        var videoFound = playerWindow.videos.find((val, key, number) => {
+            const sub = dataExtractor.subscribe((next) => {
+                videoData = next(val);
+            }, (err) => {
+                console.log(err);
+            }, () => { });
+            sub.unsubscribe();
+            if (videoData.videoId === videoId)
+                return true;
+            return false;
+        });
+
+        if (typeof videoData !== undefined && videoData) {
+            this.ngRedux.dispatch({
+                type: YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED,
+                payload: {
+                    playerId: playerId,
+                    videoId: videoData.videoId,
+                    videoTitle: videoData.title,
+                    imgUrl: videoData.imgUrl,
+                    playing: false
+                }
+            });
+        } else {
+            this.ngRedux.dispatch({
+                type: YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED_ERROR,
+                payload: {
+                    playerId: playerId,
+                }
+            });
+        }
     }
 
     startVideo(playerId: string) {
@@ -115,16 +195,6 @@ export class YoutubeWindowActions {
         });
     }
 
-    stopVideo(playerId: string) {
-        const window = this.windowById(playerId);
-        this.ngRedux.dispatch({
-            type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED,
-            payload: {
-                playerId: playerId,
-                playing: false
-            }
-        });
-    }
 
     private windowById(playerId: string) {
         const state = this.ngRedux.getState();
@@ -135,7 +205,6 @@ export class YoutubeWindowActions {
             return playerWindow;
         }
     }
-
 }
 
 export interface IYoutubeSearch {

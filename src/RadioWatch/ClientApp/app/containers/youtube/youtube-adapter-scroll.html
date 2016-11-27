@@ -1,0 +1,26 @@
+<div style="height:230px">
+    <div class="flex-container" style="height:30%">
+        <div class="flex-column">
+            <div class="flex-center" (wheel)="wheel($event)">
+                <!--<div *ngIf="!left" class="clear-gif empty-block"></div>-->
+                <div class="perspective-left">
+                    <div class="transform-left">
+                        <img style="height: 200px; width: 356px;" src="{{leftKv.value}}">
+                    </div>
+                </div>
+                <div class="flex-center">
+                    <youtube-window [searchParams]='searchTerm$' [playerId]='playerId' [videoIdFromScroll]="videoId$" (videoMetaData)="onVideoMetaDataChange($event)">
+                    </youtube-window>
+                </div>
+                <div class="perspective-right">
+                    <div class="transform-right">
+                        <img style="height: 200px; width: 356px;" src="{{rightKv.value}}">
+                    </div>
+                </div>
+            </div>
+            <div class="flex-center">
+                <h5>{{centerKv.title}}</h5>
+            </div>
+        </div>
+    </div>
+</div>

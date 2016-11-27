@@ -20,7 +20,8 @@ export {
 export {
     YoutubeEmbedComponent,
     YoutubeWindowComponent,
-    YoutubeAdapterComponent
+    YoutubeAdapterComponent,
+    YoutubeAdapterScrollComponent
 } from './youtube'
 export {
     TestDisplayComponent

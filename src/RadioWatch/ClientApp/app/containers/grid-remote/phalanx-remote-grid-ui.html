@@ -23,7 +23,7 @@
 
 <table *ngFor="let c of displayData; let i = index;" class="table">
     <tr *ngIf="c.data.isExpansionRowPhxRmtGrid">
-        <phx-rmt-grid-expansion></phx-rmt-grid-expansion>
+        <phx-rmt-grid-expansion [rowData]="displayData.get(i-1)" ></phx-rmt-grid-expansion>
     </tr>
     <td *ngIf="!c.data.isExpansionRowPhxRmtGrid">
         <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>

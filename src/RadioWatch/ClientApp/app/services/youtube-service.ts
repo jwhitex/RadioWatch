@@ -2,6 +2,7 @@ import { Http } from '@angular/http';
 import { Injectable, NgZone, Inject } from '@angular/core';
 import { WindowRefService } from './window-ref.service';
 import { DocumentRefService } from './document-ref.service';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class YoutubeService {
@@ -49,9 +50,18 @@ export class YoutubeService {
         });
     }
 
+    setupPlayerStateChangedEventListener(playerId: string, player: any, playerStateChanged$: Subject<PlayerStateModel>) {
+        this.window['youtubePlayerStateEventListenerFunc'] = (event) => {
+            playerStateChanged$.next({
+                playerId: playerId,
+                statusId: event.data
+            });
+        };
+        this.addPlayerStateEventListener('youtubePlayerStateEventListenerFunc', player);
+    }
+
     //https://github.com/hughred22/Ionic2-Angular2-YouTube-Channel-App
     setupPlayer(playerElementId: string) {
-        console.log("Running Setup Player");
         this.window['onYouTubeIframeAPIReady'] = () => {
             if (this.window['YT']) {
                 console.log('Youtube API is ready');
@@ -68,9 +78,31 @@ export class YoutubeService {
         player.loadVideoById(videoId);
     }
 
+    private addPlayerStateEventListener(listenerFuncName: string, player: any): void {
+        player.addEventListener('onStateChange', listenerFuncName);
+    }
+
+    pauseVideo(player: any): void {
+        player.pauseVideo();
+    }
+
     private throwError(message: string) {
         const error = new Error(message);
         console.error(error);
         throw error;
     }
+}
+
+export interface PlayerStateModel {
+    playerId: string,
+    statusId: number
+}
+
+export const YOUTUBE_PLAYER_STATES = {
+    UNSTARTED: -1,
+    ENDED: 0,
+    PLAYING: 1,
+    PAUSED: 2,
+    BUFFERING: 3,
+    CUED: 5
 }

@@ -1,6 +1,7 @@
-import { Component, Input, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
+import { Component, Input, Output, ChangeDetectionStrategy, AfterViewInit, EventEmitter } from '@angular/core';
 import { YoutubeWindowActions } from '../../actions';
 import { IYoutubeWindowState } from '../../store';
+import { Subscription, Subject } from 'rxjs';
 
 @Component({
     selector: 'youtube-embed',
@@ -13,6 +14,7 @@ export class YoutubeEmbedComponent implements AfterViewInit {
 
     @Input() playerId: string = "youtube_embed_placeholder";
     @Input() playerWindow: IYoutubeWindowState;
+    @Output() youtubeIframeInit = new EventEmitter<string>();
 
     play(e) {
         this.youtubeActions.startVideo(this.playerId);
@@ -20,10 +22,11 @@ export class YoutubeEmbedComponent implements AfterViewInit {
 
     stop() {
         //get attached to youtube video..
-        this.youtubeActions.stopVideo(this.playerId);
+        this.youtubeActions.pauseVideo(this.playerId);
     }
 
     ngAfterViewInit() {
         this.youtubeActions.initYoutubeWindow(this.playerId);
-    }
+        this.youtubeIframeInit.emit(this.playerId);
+    }   
 }

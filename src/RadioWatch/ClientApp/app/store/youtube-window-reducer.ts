@@ -13,6 +13,7 @@ export interface IYoutubeWindowState {
     videoTitle: string;
     imgUrl: string;
     ready: boolean;
+    status: string;
     playing: boolean;
     playerHeight: string;
     playerWidth: string;
@@ -27,6 +28,7 @@ const INIT_STATE_WINDOW = {
     videoTitle: null,
     imgUrl: null,
     ready: false,
+    status: null,
     playing: false,
     playerHeight: '100%',
     playerWidth: '100%',
@@ -56,7 +58,10 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_FAILED:
         case YOUTUBE_WINDOW_ACTIONS.VIDEO_STARTED:
         case YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED:
+        case YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED:
+        case YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED_ERROR:
         case YOUTUBE_WINDOW_ACTIONS.PLAYER_LOADED:
+        case YOUTUBE_WINDOW_ACTIONS.PLAYER_STATE_CHANGE:
             return tassign(state, {
                 playerWindows: state.playerWindows.map(t => youtubeWindowReducer(t, action)).toList()
             });
@@ -67,7 +72,7 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
 
 export function youtubeWindowReducer(state = INIT_STATE_WINDOW, action): IYoutubeWindowState {
     const ap = action.payload;
-    if (typeof ap === "undefined" || ap.playerId !== state.playerId){
+    if (typeof ap === "undefined" || ap.playerId !== state.playerId) {
         return state;
     }
     switch (action.type) {
@@ -95,8 +100,24 @@ export function youtubeWindowReducer(state = INIT_STATE_WINDOW, action): IYoutub
                     playerId: ap.playerId,
                     playing: ap.playing
                 });
+        case YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED:
+            return tassign(state,
+                {
+                    playerId: ap.playerId,
+                    videoId: ap.videoId,
+                    videoTitle: ap.videoTitle,
+                    imgUrl: ap.imgUrl,
+                    playing: ap.playing,
+                });
+        case YOUTUBE_WINDOW_ACTIONS.PLAYER_STATE_CHANGE:
+            return tassign(state,
+                {
+                    playerId: ap.playerId,
+                    status: ap.status
+                });
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_IN_PROG:
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_FAILED:
+        case YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED_ERROR:
         default:
             return state;
     }

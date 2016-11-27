@@ -110,7 +110,6 @@ export class PhxGridActions {
                 atIndexInsert: rowInfo.index + 1,
             }
         });
-        console.log(rowInfo);
     }
 
     collapseRow(rowInfo: any) {
@@ -120,7 +119,6 @@ export class PhxGridActions {
                 key: rowInfo.row.key,
             }
         });
-        console.log(rowInfo);
     }
 
     private phxGridUpdatePagination() {
