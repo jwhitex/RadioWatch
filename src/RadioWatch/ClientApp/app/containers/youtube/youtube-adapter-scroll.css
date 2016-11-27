@@ -24,15 +24,15 @@
   display: inline-block;
 }
 
-.empty-block {
-    position: relative;
-    display: inline-block;
+.video-dimension {
+    float: left;
     height: 200px; 
     width: 356px;
 }
 
-
 .clear-gif {
+    height: 100%;
+    width: 100%;
     background-image: url("../../img/clear.gif");
     background-size: 200px 356px;
 }

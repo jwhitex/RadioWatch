@@ -119,19 +119,20 @@ export class YoutubeWindowActions {
             }
         });
         if (statusText === "ENDED" || statusText === "PAUSED") {
-            this.ngRedux.dispatch({
-                type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED,
-                payload: {
-                    playerId: playerState.playerId,
-                    playing: false
-                }
-            });
+            //todo: change playing to show player
+            // this.ngRedux.dispatch({
+            //     type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED,
+            //     payload: {
+            //         playerId: playerState.playerId,
+            //         playing: false
+            //     }
+            // });
         }
     }
 
     pauseVideo(playerId: string): void {
         const playerWindow = this.windowById(playerId);
-        if (playerWindow.playing){
+        if (playerWindow.playing) {
             this.ytService.pauseVideo(playerWindow.player);
         }
     }

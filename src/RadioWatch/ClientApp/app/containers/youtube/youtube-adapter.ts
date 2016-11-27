@@ -1,5 +1,5 @@
 import { Component, Input, Output, OnDestroy, OnInit, EventEmitter } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { IYoutubeSearch, YoutubeWindowActions } from '../../actions';
 
 @Component({
@@ -9,13 +9,15 @@ import { IYoutubeSearch, YoutubeWindowActions } from '../../actions';
     <youtube-window
     [searchParams]='searchTerm$'
     [playerId]='playerId'
+    [videoIdFromScroll]="videoId$" 
+    (videoMetaData)="onVideoMetaDataChange($event)"
     >
     </youtube-window>
     `
 })
 export class YoutubeAdapterComponent implements OnInit, OnDestroy {
     searchTerm$: BehaviorSubject<IYoutubeSearch>;
-    sub: any;
+    videoId$: Subject<string>;
     constructor(private youtubeActions: YoutubeWindowActions) {
         let min = 1000;
         let max = 100000
@@ -36,8 +38,12 @@ export class YoutubeAdapterComponent implements OnInit, OnDestroy {
             } as IYoutubeSearch;
         }
         this.searchTerm$ = new BehaviorSubject(search());
+        this.videoId$ = new Subject<string>();
     }
     ngOnDestroy(){
         this.youtubeActions.removeYoutubeWindow(this.playerId);
+    }
+
+    onVideoMetaDataChange(e){
     }
 }
