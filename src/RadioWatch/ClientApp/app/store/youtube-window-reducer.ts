@@ -14,7 +14,7 @@ export interface IYoutubeWindowState {
     imgUrl: string;
     ready: boolean;
     status: string;
-    playing: boolean;
+    showIframe: boolean;
     playerHeight: string;
     playerWidth: string;
     videos: List<any>;
@@ -29,7 +29,7 @@ const INIT_STATE_WINDOW = {
     imgUrl: null,
     ready: false,
     status: null,
-    playing: false,
+    showIframe: false,
     playerHeight: '100%',
     playerWidth: '100%',
     videos: List<any>(),
@@ -94,11 +94,10 @@ export function youtubeWindowReducer(state = INIT_STATE_WINDOW, action): IYoutub
                     ready: ap.ready
                 });
         case YOUTUBE_WINDOW_ACTIONS.VIDEO_STARTED:
-        case YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED:
             return tassign(state,
                 {
                     playerId: ap.playerId,
-                    playing: ap.playing
+                    showIframe: ap.showIframe
                 });
         case YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED:
             return tassign(state,
@@ -107,7 +106,7 @@ export function youtubeWindowReducer(state = INIT_STATE_WINDOW, action): IYoutub
                     videoId: ap.videoId,
                     videoTitle: ap.videoTitle,
                     imgUrl: ap.imgUrl,
-                    playing: ap.playing,
+                    showIframe: ap.showIframe,
                 });
         case YOUTUBE_WINDOW_ACTIONS.PLAYER_STATE_CHANGE:
             return tassign(state,
@@ -115,6 +114,7 @@ export function youtubeWindowReducer(state = INIT_STATE_WINDOW, action): IYoutub
                     playerId: ap.playerId,
                     status: ap.status
                 });
+        case YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED:
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_IN_PROG:
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_FAILED:
         case YOUTUBE_WINDOW_ACTIONS.VIDEO_CHANGED_ERROR:

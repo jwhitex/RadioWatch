@@ -119,20 +119,18 @@ export class YoutubeWindowActions {
             }
         });
         if (statusText === "ENDED" || statusText === "PAUSED") {
-            //todo: change playing to show player
-            // this.ngRedux.dispatch({
-            //     type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED,
-            //     payload: {
-            //         playerId: playerState.playerId,
-            //         playing: false
-            //     }
-            // });
+            this.ngRedux.dispatch({
+                type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STOPED,
+                payload: {
+                    playerId: playerState.playerId,
+                }
+            });
         }
     }
 
     pauseVideo(playerId: string): void {
         const playerWindow = this.windowById(playerId);
-        if (playerWindow.playing) {
+        if (playerWindow.showIframe) {
             this.ytService.pauseVideo(playerWindow.player);
         }
     }
@@ -160,7 +158,7 @@ export class YoutubeWindowActions {
                     videoId: videoData.videoId,
                     videoTitle: videoData.title,
                     imgUrl: videoData.imgUrl,
-                    playing: false
+                    showIframe: false
                 }
             });
         } else {
@@ -188,7 +186,7 @@ export class YoutubeWindowActions {
                 type: YOUTUBE_WINDOW_ACTIONS.VIDEO_STARTED,
                 payload: {
                     playerId: playerId,
-                    playing: true
+                    showIframe: true
                 }
             });
         }).catch(() => {

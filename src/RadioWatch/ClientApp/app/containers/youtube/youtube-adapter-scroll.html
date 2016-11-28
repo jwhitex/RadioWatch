@@ -2,10 +2,10 @@
     <div class="flex-container" style="height:30%">
         <div class="flex-column">
             <div class="flex-center" (wheel)="wheel($event)">
-                <div *ngIf="!leftKv.value" class="video-dimension">
+                <div *ngIf="!leftKv.value">
                     <div class="clear-gif"></div>
                 </div>
-                <div *ngIf="leftKv.value"  class="perspective-left">
+                <div *ngIf="leftKv.value" class="perspective-left">
                     <div class="transform-left">
                         <img style="height: 200px; width: 356px;" src="{{leftKv.value}}">
                     </div>
@@ -19,7 +19,7 @@
                         <img style="height: 200px; width: 356px;" src="{{rightKv.value}}">
                     </div>
                 </div>
-                <div *ngIf="!rightKv.value" class="video-dimension">
+                <div *ngIf="!rightKv.value">
                     <div class="clear-gif"></div>
                 </div>
             </div>

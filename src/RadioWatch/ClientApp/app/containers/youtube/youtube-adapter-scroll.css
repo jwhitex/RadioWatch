@@ -24,15 +24,9 @@
   display: inline-block;
 }
 
-.video-dimension {
-    float: left;
+.clear-gif {
     height: 200px; 
     width: 356px;
-}
-
-.clear-gif {
-    height: 100%;
-    width: 100%;
     background-image: url("../../img/clear.gif");
     background-size: 200px 356px;
 }

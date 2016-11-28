@@ -27,9 +27,8 @@ import { NgReduxModule } from 'ng2-redux';
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
             { path: 'home', component: HomeComponent },
-            { path: 'playlist', component: TestDisplayComponent },
-            { path: 'gridview', component: PhalanxGridExampleComponent },
-            { path: 'rmtgridview', component: PhalanxRemoteNprGridComponent },
+            { path: 'evening-music', component: PhalanxRemoteNprGridComponent },
+            { path: 'example', component: PhalanxGridExampleComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

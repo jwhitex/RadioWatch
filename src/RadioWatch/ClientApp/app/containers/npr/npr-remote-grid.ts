@@ -5,7 +5,8 @@ import { BehaviorSubject, Observable, Observer } from 'rxjs';
 
 @Component({
     selector: 'npr-remote-grid',
-    template: require('./npr-remote-grid.html')
+    template: require('./npr-remote-grid.html'),
+    styles: [require('./npr-remote-grid.css')]
 })
 export class PhalanxRemoteNprGridComponent implements OnInit {
     constructor() {
