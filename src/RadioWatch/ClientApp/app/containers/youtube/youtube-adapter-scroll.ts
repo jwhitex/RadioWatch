@@ -1,7 +1,9 @@
 import { Component, Input, Output, OnDestroy, OnInit, EventEmitter } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { IYoutubeSearch, YoutubeWindowActions } from '../../actions';
+import { IAppState, IYoutubeWindowState } from '../../store';
 import { List } from 'immutable';
+import { NgRedux } from 'ng2-redux';
 
 @Component({
     selector: 'youtube-adapter-scroll',
@@ -13,7 +15,10 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
     searchTerm$: BehaviorSubject<IYoutubeSearch>;
     videoId$: Subject<string>;
 
-    constructor(private youtubeActions: YoutubeWindowActions) {
+    //todo: also resolving this in child component?
+    playerWindowReady$: Observable<boolean>;
+
+    constructor(private youtubeActions: YoutubeWindowActions, private ngRedux: NgRedux<IAppState>) {
         let min = 1000;
         let max = 100000
         const val = Math.floor(Math.random() * (max - min)) + min;
@@ -23,7 +28,7 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
 
     @Input() playerId: string;
     @Input() searchTerm: string = "rick and morty everyone dies";
-    
+
     ngOnInit() {
         let search = () => {
             return {
@@ -35,6 +40,13 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
         }
         this.searchTerm$ = new BehaviorSubject(search());
         this.videoId$ = new Subject<string>();
+        this.playerWindowReady$ = this.ngRedux.select<boolean>((state) => {
+            const window = state.youtubeWindows.playerWindows.find((value, key) => value.playerId === this.playerId);
+            if (!window){
+                return false;
+            }
+            return window.ready;
+        });
     }
     ngOnDestroy() {
         this.youtubeActions.removeYoutubeWindow(this.playerId);
@@ -61,7 +73,7 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
 
     setImages(seed: number) {
         if (seed <= 0) {
-            this.leftKv =  new YouVideoMetaDataWithIndex();
+            this.leftKv = new YouVideoMetaDataWithIndex();
         } else {
             const leftMeta = this.videoMetaData.get(seed - 1);
             this.leftKv = {
@@ -72,7 +84,7 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
             };
         }
         const centerMeta = this.videoMetaData.get(seed);
-        if (centerMeta.videoId !== this.centerKv.id){
+        if (centerMeta.videoId !== this.centerKv.id) {
             this.videoId$.next(centerMeta.videoId);
         }
         this.centerKv = {
@@ -102,7 +114,7 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
     onVideoMetaDataChange(metaData: List<YouVideoMetaData>) {
         if (this.centerKv.value)
             return;
-       
+
         this.videoMetaData = metaData;
         const atZero = this.videoMetaData.get(0);
         if (atZero !== undefined) {

@@ -1,14 +1,19 @@
 import { Component, OnInit } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
 import { IPhxRmtGridInit, IPhxRmtGridInitColumn } from '../../actions';
+import { select } from 'ng2-redux';
 import { List } from 'immutable';
 import { BehaviorSubject, Observable, Observer } from 'rxjs';
 
 @Component({
     selector: 'npr-remote-grid',
+    providers: [AsyncPipe],
     template: require('./npr-remote-grid.html'),
     styles: [require('./npr-remote-grid.css')]
 })
 export class PhalanxRemoteNprGridComponent implements OnInit {
+    @select(['phxRmtGrid','action']) action$: Observable<string>;
+
     constructor() {
         this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(null));
         this.dataGetter$ = new Observable((observer) => {
@@ -64,7 +69,6 @@ export class PhalanxRemoteNprGridComponent implements OnInit {
         columns: this.cols
     }
 
-    mode: string = "Get";
     searchFormModel = {
         queryDate: "",
         queryTerm: ""
@@ -112,16 +116,7 @@ export class PhalanxRemoteNprGridComponent implements OnInit {
             return ''
         }
     }
-
-    //ui
-    changeMode() {
-        if (this.mode === 'Get') {
-            this.mode = 'Getting';
-        } else {
-            this.mode = 'Get';
-        }
-    }
-
+    
     //init
     private getInitialDateForPicker() {
         var clientDate = new Date();

@@ -11,12 +11,16 @@
                 <input class="form-control" [(ngModel)]="searchFormModel.queryTerm" name="queryTerm" type="text" id="queryTerm" placeholder="search..."
                     #queryTerm="ngModel" />
             </div>
-            <button [disabled]="!nprQueryForm.form.valid" type="submit" class="btn btn-primary">
-            {{mode}}
-        </button>
+
+            <button *ngIf="(action$ | async) !== 'fetching'" [disabled]="!nprQueryForm.form.valid" type="submit" class="btn btn-primary">
+               Go
+            </button>
+            <div *ngIf="(action$ | async) === 'fetching'">
+                <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
+            </div>
         </form>
     </div>
-
     <phx-remote-grid [init]='init' [dataSourceChanged]='dataSource$' [dataExtractionDevice]='dataGetter$'>
     </phx-remote-grid>
 </div>

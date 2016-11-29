@@ -45,7 +45,7 @@ export class PhxRmtGridActions {
     phxGridRead(request: IPhxRmtGridRequest, dataExtractionDevice: Observable<any>) {
         this.ngRedux.dispatch({
             type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_PENDING,
-            payload: request
+            payload: Object.assign({},request, {action:'fetching'} ) 
         });
 
         //todo: optimize calls..
@@ -65,6 +65,7 @@ export class PhxRmtGridActions {
                         response: res,
                         data: gData,
                         total: totalR,
+                        action: ''
                     }
                 });
             })
@@ -77,7 +78,10 @@ export class PhxRmtGridActions {
                 this.phxGridUpdatePagination())
             .catch(() =>
                 this.ngRedux.dispatch({
-                    type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR
+                    type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR,
+                    payload: {
+                        action: ''
+                    }
                 }))
             .subscribe();
     }

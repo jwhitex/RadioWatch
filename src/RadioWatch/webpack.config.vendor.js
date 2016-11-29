@@ -32,8 +32,7 @@ module.exports = {
             'es6-promise',
             'jquery',
             'zone.js',
-            //'rxjs/Rx',
-            //'rxjs/add/operator/do'
+
         ]
     },
     output: {

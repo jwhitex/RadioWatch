@@ -29,6 +29,7 @@ import { NgReduxModule } from 'ng2-redux';
             { path: 'home', component: HomeComponent },
             { path: 'evening-music', component: PhalanxRemoteNprGridComponent },
             { path: 'example', component: PhalanxGridExampleComponent },
+            { path: 'test', component: TestDisplayComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

@@ -26,7 +26,7 @@
     <td *ngIf="!c.data.isExpansionRowPhxGrid">
         <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>
     </td>
-    <td *ngFor="let col of setting.columns" [hidden]="!col.visible && !c.data.isExpansionRowPhxGrid" [ngStyle]="{'width': '30%'}" >
+    <td *ngFor="let col of setting.columns" [hidden]="!col.visible && !c.data.isExpansionRowPhxGrid" [ngStyle]="{'width': '30%'}">
         <phx-grid-block [value]="c.data[col.dataName]"></phx-grid-block>
     </td>
     <td *ngIf="!c.data.isExpansionRowPhxGrid" [hidden]="!setting.allowDelete">

@@ -14,6 +14,7 @@ export interface IPhxRmtGridState {
     totalRows: number;
     pages: List<number>;
     //display properties...
+    action: string;
     paginationWidth: string;
     paginationButtonColors: List<IPhxRmtGridPaginationState>;
     dataSource: string;
@@ -33,7 +34,7 @@ export interface IPhxRmtGridColumnState {
     dataName: string,
     sortable: boolean,
     visible: boolean,
-    date_pipe: string,   
+    date_pipe: string,
 }
 
 export interface IPhxRmtGridPaginationState {
@@ -58,10 +59,11 @@ const INIT_STATE: IPhxRmtGridState = {
     by: 1,
     totalRows: 0,
     pages: List<number>([]),
+    action: '',
     paginationWidth: '',
     paginationButtonColors: List<IPhxRmtGridPaginationState>([]),
     dataSource: '',
-    setting: {       
+    setting: {
         allowDelete: false,
         allowSorting: false,
         columns: List<IPhxRmtGridColumnState>([]),
@@ -75,24 +77,25 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
     switch (action.type) {
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_INITIALIZE_PENDING:
             return tassign(state,
-            {
-                id: ap.id,
-                pageSize: ap.pageSize,
-                setting: tassign(state.setting,
                 {
-                    allowDelete: ap.allowDelete,
-                    allowSorting: ap.allowSorting,
-                    initialPage: ap.initialPage,
-                    columns: List<IPhxRmtGridColumnState>(ap.columns)
-                })
-            });
+                    id: ap.id,
+                    pageSize: ap.pageSize,
+                    setting: tassign(state.setting,
+                        {
+                            allowDelete: ap.allowDelete,
+                            allowSorting: ap.allowSorting,
+                            initialPage: ap.initialPage,
+                            columns: List<IPhxRmtGridColumnState>(ap.columns)
+                        })
+                });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_PENDING:
             return tassign(state, {
                 dataSource: ap.dataSource,
                 page: ap.page,
                 pageSize: ap.pageSize,
                 sort: ap.sort,
-                by: ap.by
+                by: ap.by,
+                action: ap.action
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS:
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_SUCCESS:
@@ -106,8 +109,9 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                 totalRows: ap.total,
                 data: List<IPhxRmtGridItemState>(ap.data.map((x) => {
                     key++;
-                    return Object.assign({},{key: key, expanded: false, data: x });
-                }))
+                    return Object.assign({}, { key: key, expanded: false, data: x });
+                })),
+                action: ap.action
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_SORT_PENDING:
             return tassign(state, {
@@ -151,6 +155,10 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                     }
                     return x;
                 })
+            });
+        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR:
+            return tassign(state, {
+                page: ap.action
             });
         //todo: error actions
         default:
