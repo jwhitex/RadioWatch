@@ -8,8 +8,8 @@ import { NgRedux } from 'ng2-redux';
 @Component({
     selector: 'youtube-adapter-scroll',
     providers: [YoutubeWindowActions],
-    template: require('./youtube-adapter-scroll.html'),
-    styles: [require('./youtube-adapter-scroll.css')]
+    templateUrl: './youtube-adapter-scroll.html',
+    styleUrls: ['./youtube-adapter-scroll.css']
 })
 export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
     searchTerm$: BehaviorSubject<IYoutubeSearch>;

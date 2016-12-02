@@ -1,13 +1,12 @@
 import { Component, AfterViewInit} from '@angular/core';
-import { YoutubeService } from "../services";
+import { YoutubeService } from "../../services";
 import { NgRedux, DevToolsExtension } from 'ng2-redux';
-import { IAppState, rootReducer, enhancers } from '../store';
+import { IAppState, rootReducer, enhancers } from '../../store';
 
 @Component({
     selector: 'app',
-    template: require('./app.component.html'),
-    styles: [require('./app.component.css')],
-    providers: [YoutubeService]
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css']
 })
 export class AppComponent {
     constructor(public ytService: YoutubeService, ngRedux: NgRedux<IAppState>, devTool: DevToolsExtension) {

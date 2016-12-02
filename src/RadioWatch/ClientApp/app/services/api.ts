@@ -15,7 +15,7 @@ export class ApiService {
     options: RequestOptions = new RequestOptions({ headers: this.headers });
 
     //todo: set global config..
-    api_url: string = 'http://localhost:3195';
+    api_url: string = 'http://localhost:5000';
 
     //bind to context of the class 'http'
     constructor(private http: Http){     

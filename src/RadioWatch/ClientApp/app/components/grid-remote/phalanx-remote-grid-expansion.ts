@@ -2,8 +2,8 @@ import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
     selector: 'phx-rmt-grid-expansion',
-    template: require('./phalanx-remote-grid-expansion.html'),
-    styles: [require('./phalanx-remote-grid-expansion.css')]
+    templateUrl: './phalanx-remote-grid-expansion.html',
+    styleUrls: ['./phalanx-remote-grid-expansion.css']
 })
 export class PhalanxRemoteGridExpansionComponent implements OnInit {
     constructor() { }

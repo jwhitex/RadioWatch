@@ -1,4 +1,4 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 const persistState = require('redux-localstorage');
 import { phxGridReducer, IPhxGridState } from './phxgrid.reducer'
 import { phxRmtGridReducer, IPhxRmtGridState } from './phxrmtgrid.reducer'
@@ -16,10 +16,20 @@ export const rootReducer = combineReducers<IAppState>({
     youtubeWindows: youtubeWindowsReducer
 });
 
+function slicer(paths: any) {
+    return (state) => {
+        let subset = {}
+        return subset;
+    }
+}
+
+const config = {
+    key: "local",
+    slicer: slicer
+}
 
 export const enhancers = [
-    //dunno will figure..stores in local storage..
-    persistState('kdfkdj','kfdk/fkdjk')
+    persistState("phxGrid", config)
 ];
 
 //reducer pojos

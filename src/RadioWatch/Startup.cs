@@ -1,7 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Cors.Internal;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,10 +24,9 @@ namespace RadioWatch
             Configuration = builder.Build();
 
             Log.Logger = new LoggerConfiguration()
-                        .MinimumLevel.Information()
-                        .Enrich.FromLogContext()
-                        .WriteTo.Seq("http://localhost:5341").CreateLogger();
-
+            .MinimumLevel.Information()
+            .Enrich.FromLogContext()
+            .WriteTo.Seq("http://localhost:5341").CreateLogger();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -60,6 +61,7 @@ namespace RadioWatch
             }
 
             app.UseStaticFiles();
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

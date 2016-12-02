@@ -11,7 +11,7 @@ import {
     PhalanxGridExampleComponent,
     PhalanxRemoteNprGridComponent,
     TestDisplayComponent
-} from './containers';
+} from './components';
 import { containerDeclarations } from './app.declarations';
 import { NgReduxModule } from 'ng2-redux';
 

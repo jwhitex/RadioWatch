@@ -4,7 +4,7 @@ import { DocumentRefService } from '../../services';
 
 @Component({
     selector: 'phx-grid-expansion',
-    template: require('./phalanx-grid-expansion.html'),
+    templateUrl: './phalanx-grid-expansion.html',
 })
 export class PhalanxGridExpansionComponent implements AfterViewInit {
     expansionId: string;

@@ -1,19 +1,18 @@
 import { Component, Input, Output, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
-import { IPhxGridSettingState, IPhxGridItemState, IPhxGridPaginationState, IPhxGridColumnState } from '../../store';
+import { IPhxRmtGridSettingState, IPhxRmtGridItemState, IPhxRmtGridPaginationState, IPhxRmtGridColumnState } from '../../store';
 import { List, Iterable } from 'immutable';
 
-
 @Component({
-    selector: 'phx-grid-ui',
-    template: require('./phalanx-grid-ui.html'),
+    selector: 'phx-remote-grid-ui',
+    templateUrl: './phalanx-remote-grid-ui.html',
     changeDetection: ChangeDetectionStrategy.Default
 })
-export class PhalanxGridUiComponent {
+export class PhalanxRemoteGridUiComponent {
     constructor() { }
 
-    @Input() data: List<IPhxGridItemState>
-    @Input() setting: IPhxGridSettingState
-    @Input() paginationButtonColors: List<IPhxGridPaginationState>
+    @Input() displayData: List<IPhxRmtGridItemState>
+    @Input() setting: IPhxRmtGridSettingState
+    @Input() paginationButtonColors: List<IPhxRmtGridPaginationState>
     @Input() paginationWidth: string
     @Input() pages: List<number>
     @Input() by: number
@@ -25,12 +24,11 @@ export class PhalanxGridUiComponent {
     @Output() collapseRowEvent = new EventEmitter();
 
     changePage(page) {
-        this.changePageEvent.emit(page);
+        this.changePageEvent.emit(page)
     }
     sort(sort, by) {
         this.sortEvent.emit({ sort: sort, by: by })
     }
-
     expandOrCollapseRow(row, i) {
         if (row.expanded)
             this.collapseRowEvent.emit({ row: row, index: i });
@@ -39,5 +37,4 @@ export class PhalanxGridUiComponent {
     }
     deleteRow(row) {
     }
-
 }

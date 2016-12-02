@@ -5,8 +5,8 @@ import { Subscription, Subject } from 'rxjs';
 
 @Component({
     selector: 'youtube-embed',
-    template: require('./youtube-embed.html'),
-    styles: [require('./youtube-embed.css')],
+    templateUrl: './youtube-embed.html',
+    styleUrls: ['./youtube-embed.css'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class YoutubeEmbedComponent implements AfterViewInit {
