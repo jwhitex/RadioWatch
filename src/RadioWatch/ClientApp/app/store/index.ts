@@ -3,17 +3,20 @@ const persistState = require('redux-localstorage');
 import { phxGridReducer, IPhxGridState } from './phxgrid.reducer'
 import { phxRmtGridReducer, IPhxRmtGridState } from './phxrmtgrid.reducer'
 import { youtubeWindowsReducer, IYoutubeWindowsState } from './youtube-window-reducer';
+import { appConfigReducer, IAppConfigState } from './app-config-reducer';
 
 export class IAppState {
     phxGrid?: IPhxGridState;
     phxRmtGrid?: IPhxRmtGridState;
     youtubeWindows?: IYoutubeWindowsState;
+    appConfig?: IAppConfigState
 }
 
 export const rootReducer = combineReducers<IAppState>({
     phxGrid: phxGridReducer,
     phxRmtGrid: phxRmtGridReducer,
-    youtubeWindows: youtubeWindowsReducer
+    youtubeWindows: youtubeWindowsReducer,
+    appConfig: appConfigReducer
 });
 
 function slicer(paths: any) {
@@ -29,7 +32,7 @@ const config = {
 }
 
 export const enhancers = [
-    persistState("phxGrid", config)
+    persistState("appConfig", config)
 ];
 
 //reducer pojos
@@ -53,3 +56,6 @@ export {
     IYoutubeWindowsState,
     IYoutubeWindowState
 } from './youtube-window-reducer';
+export {
+    IAppConfigState
+} from './app-config-reducer'

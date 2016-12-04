@@ -1,15 +1,41 @@
-import { Component, Input, Output, ChangeDetectionStrategy, EventEmitter } from '@angular/core';
+import { Component, Input, Output, ChangeDetectionStrategy, EventEmitter, AfterViewInit, trigger, state, style, transition, animate } from '@angular/core';
 import { IPhxGridSettingState, IPhxGridItemState, IPhxGridPaginationState, IPhxGridColumnState } from '../../store';
 import { List, Iterable } from 'immutable';
-
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
     selector: 'phx-grid-ui',
     templateUrl: './phalanx-grid-ui.html',
-    changeDetection: ChangeDetectionStrategy.Default
+    changeDetection: ChangeDetectionStrategy.Default,
+    animations: [
+        trigger('rollHeightAndFade', [
+            state('expansion', style({ height: '*', opacity: 1 })),
+            transition('void => expansion', [
+                style({ height: 0, opacity: 0 }),
+                animate(300, style({ height: '*' })),
+                animate(300, style({ opacity: 1 }))
+            ]),
+            transition('expansion => void', [
+                style({ height: '*',opacity: 1 }),
+                animate(300, style({ opacity: 0 })),
+                animate(300, style({ height: 0 }))
+            ])
+        ]),
+        trigger('fadeIn',[
+            transition('void => PLS_FADE', [
+                style({ opacity: 0 }),
+                animate(300, style({ opacity: 1 }))
+            ]),
+        ])
+    ]
 })
-export class PhalanxGridUiComponent {
+export class PhalanxGridUiComponent implements AfterViewInit {
     constructor() { }
+
+    //constants? Maybe create a file in each component folder?
+    PLS_FADE = 'PLS_FADE';
+    NO_FADE = 'NO_FADE';
+    DROP_ALL_ANIMATIONS = 'DROP_ALL_ANIMATIONS';
 
     @Input() data: List<IPhxGridItemState>
     @Input() setting: IPhxGridSettingState
@@ -24,8 +50,17 @@ export class PhalanxGridUiComponent {
     @Output() expandRowEvent = new EventEmitter();
     @Output() collapseRowEvent = new EventEmitter();
 
+    //Since expansion..have to line up grid blocks. 
+    //todo: This should be calculated from what user wishes to be displayed i.e `${count*10}%`
+    gridBlockWidthPercent = '30%'
+
+    //Expansion rewrites the grid..
+    whenGridPopulating = this.PLS_FADE;
+
     changePage(page) {
+        this.whenGridPopulating = this.PLS_FADE;
         this.changePageEvent.emit(page);
+        this.setNoFade();
     }
     sort(sort, by) {
         this.sortEvent.emit({ sort: sort, by: by })
@@ -37,7 +72,17 @@ export class PhalanxGridUiComponent {
         else
             this.expandRowEvent.emit({ row: row, index: i });
     }
-    deleteRow(row) {
+    
+    //todo: implement
+    deleteRow(row) {}
+
+    ngAfterViewInit(){
+        this.setNoFade();
     }
 
+    setNoFade(){
+        //less than ideal..counting on no computation to perform as it does on localhost..
+        let obs = Observable.timer(400).take(1);
+        obs.subscribe(() => this.whenGridPopulating = this.NO_FADE);
+    }
 }

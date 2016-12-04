@@ -1,9 +1,9 @@
 import { Component, Input, Output, OnDestroy, OnInit, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { IYoutubeSearch, YoutubeWindowActions } from '../../actions';
-import { IAppState, IYoutubeWindowState } from '../../store';
+import { IAppState, IYoutubeWindowState, IAppConfigState } from '../../store';
 import { List } from 'immutable';
-import { NgRedux } from 'ng2-redux';
+import { NgRedux, select } from 'ng2-redux';
 
 @Component({
     selector: 'youtube-adapter-scroll',
@@ -18,23 +18,29 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
     //todo: also resolving this in child component?
     playerWindowReady$: Observable<boolean>;
 
+    //get googleToken
+    @select(['appConfig']) appConfig$: Observable<IAppConfigState>;
+    appConfig: IAppConfigState;
+
     constructor(private youtubeActions: YoutubeWindowActions, private ngRedux: NgRedux<IAppState>) {
         let min = 1000;
         let max = 100000
         const val = Math.floor(Math.random() * (max - min)) + min;
         this.playerId = `youtubePlayerIdGen_${val}`;
         this.youtubeActions.addYoutubeWindow(this.playerId);
+        
+        this.appConfig$.subscribe((value) => this.appConfig = value);
     }
 
     @Input() playerId: string;
     @Input() searchTerm: string = "rick and morty everyone dies";
-
+  
     ngOnInit() {
         let search = () => {
             return {
                 searchTerm: this.searchTerm,
                 pageToken: null,
-                googleToken: 'AIzaSyBefQBMHX7xaIOKDLxCi4cG0XT_BJFSuJA',
+                googleToken: this.appConfig.youtubeApiToken,
                 maxResults: 10
             } as IYoutubeSearch;
         }
@@ -42,7 +48,7 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
         this.videoId$ = new Subject<string>();
         this.playerWindowReady$ = this.ngRedux.select<boolean>((state) => {
             const window = state.youtubeWindows.playerWindows.find((value, key) => value.playerId === this.playerId);
-            if (!window){
+            if (!window) {
                 return false;
             }
             return window.ready;
@@ -124,13 +130,16 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
                 title: atZero.title,
                 id: atZero.videoId
             };
+
             const atOne = this.videoMetaData.get(1);
-            this.rightKv = {
-                index: 1,
-                value: atOne.imgUrl,
-                title: atOne.title,
-                id: atOne.videoId
-            };
+            if (atOne != undefined) {
+                this.rightKv = {
+                    index: 1,
+                    value: atOne.imgUrl,
+                    title: atOne.title,
+                    id: atOne.videoId
+                };
+            }
         }
     }
 }

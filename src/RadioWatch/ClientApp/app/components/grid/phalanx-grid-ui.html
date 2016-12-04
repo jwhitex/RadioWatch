@@ -4,7 +4,7 @@
     <thead>
         <tr>
             <th></th>
-            <th *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': '30%'}">
+            <th *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent }">
                 {{col.colName}}
                 <a [hidden]="by==-1 || !setting.allowSorting" (click)="sort(col.dataName,-1)">
                     <div class="glyphicon glyphicon-menu-down"></div>
@@ -18,28 +18,27 @@
     </thead>
 </table>
 
-
-<table *ngFor="let c of data; let i=index;" class="table">
-    <tr *ngIf="c.data.isExpansionRowPhxGrid">
+<div *ngFor="let c of data; let i=index;" [@rollHeightAndFade]="c.data.isExpansionRowPhxGrid ? 'expansion' : ''">
+    <div *ngIf="c.data.isExpansionRowPhxGrid">
         <phx-grid-expansion></phx-grid-expansion>
-    </tr>
-    <td *ngIf="!c.data.isExpansionRowPhxGrid">
-        <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>
-    </td>
-    <td *ngFor="let col of setting.columns" [hidden]="!col.visible && !c.data.isExpansionRowPhxGrid" [ngStyle]="{'width': '30%'}">
-        <phx-grid-block [value]="c.data[col.dataName]"></phx-grid-block>
-    </td>
-    <td *ngIf="!c.data.isExpansionRowPhxGrid" [hidden]="!setting.allowDelete">
-        <a (click)="deleteRow(c)">
-            <div class="glyphicon glyphicon-trash"></div>
-        </a>
-    </td>
-</table>
-
+    </div>
+    <table class="table" *ngIf="!c.data.isExpansionRowPhxGrid" [@fadeIn]="whenGridPopulating">
+        <td>
+            <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>
+        </td>
+        <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent }">
+            <phx-grid-block [value]="c.data[col.dataName]"></phx-grid-block>
+        </td>
+        <td [hidden]="!setting.allowDelete">
+            <a (click)="deleteRow(c)">
+                <div class="glyphicon glyphicon-trash"></div>
+            </a>
+        </td>
+    </table>
+</div>
 
 <div class="btn-group" style="margin: 0px auto;" [ngStyle]="{'width': paginationWidth}">
     <button class="btn btn-primary" (click)="changePage(page-1)" type="button" [disabled]="(page-1)<0">
-
         <div class="glyphicon glyphicon-arrow-left"></div>
     </button>
     <button *ngFor="let pageIndex of pages; let ix = index;" (click)="changePage(pageIndex-1)" class="btn btn-primary" type="button"

@@ -121,7 +121,6 @@ export class PhxRmtGridActions {
                 atIndexInsert: rowInfo.index + 1,
             }
         });
-        console.log(rowInfo);
     }
 
     collapseRow(rowInfo: any) {
@@ -131,7 +130,6 @@ export class PhxRmtGridActions {
                 key: rowInfo.row.key,
             }
         });
-        console.log(rowInfo);
     }
 
     private phxGridApplyPagingOnData(data?: any, state?: any): any {
@@ -150,8 +148,6 @@ export class PhxRmtGridActions {
         const sort = state.phxRmtGrid.sort;
         const by = state.phxRmtGrid.by;
         const sortedData = data.sort((a, b) => {
-            console.log(a);
-            console.log(b);
             if (a.data[sort] > b.data[sort]) {
                 return 1 * by;
             }

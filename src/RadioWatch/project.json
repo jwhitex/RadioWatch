@@ -23,7 +23,9 @@
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.1.0",
     "Serilog.Sinks.Seq": "3.0.1",
     "Serilog": "2.3.0",
-    "Serilog.Extensions.Logging": "1.2.0"
+    "Serilog.Extensions.Logging": "1.2.0",
+    "Autofac": "4.2.1",
+    "Autofac.Extensions.DependencyInjection": "4.0.0"
   },
 
   "tools": {

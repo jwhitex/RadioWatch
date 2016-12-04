@@ -17,9 +17,5 @@ export class PhalanxGridExpansionComponent implements AfterViewInit {
     }
 
     ngAfterViewInit() {
-        let ele = this.documentRefService.nativeDocument.getElementById(this.expansionId);
-        
-        //console.log($(`#${this.expansionId}`).val());
-        
     }
 }

@@ -1,7 +1,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': '30%'}">
+            <th *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent }">
                 {{col.colName}}
 
                 <a [hidden]="by==-1 || !setting.allowSorting" (click)="sort(col.dataName,-1)">
@@ -17,27 +17,24 @@
     </thead>
 </table>
 
-
-
-
-
-<table *ngFor="let c of displayData; let i = index;" class="table">
-    <tr *ngIf="c.data.isExpansionRowPhxRmtGrid">
-        <phx-rmt-grid-expansion [rowData]="displayData.get(i-1)" ></phx-rmt-grid-expansion>
-    </tr>
-    <td *ngIf="!c.data.isExpansionRowPhxRmtGrid">
-        <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>
-    </td>
-    <td *ngFor="let col of setting.columns" [hidden]="!col.visible && !c.data.isExpansionRowPhxRmtGrid" [ngStyle]="{'width': '30%'}">
-        <phx-remote-grid-block [value]="c.data[col.dataName]"></phx-remote-grid-block>
-    </td>
-    <td  *ngIf="!c.data.isExpansionRowPhxRmtGrid" [hidden]="!setting.allowDelete">
-        <a (click)="deleteRow(c)">
-            <i class="glyphicon glyphicon-trash"></i>
-        </a>
-    </td>
-</table>
-
+<div *ngFor="let c of displayData; let i = index;" [@rollHeightAndFade]="c.data.isExpansionRowPhxRmtGrid ? 'expansion' : ''">
+    <div *ngIf="c.data.isExpansionRowPhxRmtGrid">
+        <phx-rmt-grid-expansion [rowData]="displayData.get(i-1)"></phx-rmt-grid-expansion>
+    </div>
+    <table class="table" *ngIf="!c.data.isExpansionRowPhxRmtGrid" [@fadeIn]="whenGridPopulating">
+        <td>
+            <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>
+        </td>
+        <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent}">
+            <phx-remote-grid-block [value]="c.data[col.dataName]"></phx-remote-grid-block>
+        </td>
+        <td [hidden]="!setting.allowDelete">
+            <a (click)="deleteRow(c)">
+                <i class="glyphicon glyphicon-trash"></i>
+            </a>
+        </td>
+    </table>
+</div>
 
 
 <div class="btn-group" style="margin: 0px auto;" [ngStyle]="{'width': paginationWidth}">

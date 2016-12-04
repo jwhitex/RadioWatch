@@ -16,14 +16,13 @@ export const YOUTUBE_WINDOW_ACTIONS = {
     PLAYER_LOADED: "PLAYER_LOADED",
     PLAYER_STATE_CHANGE: "PLAYER_STATE_CHANGE",
     VIDEO_CHANGED: "VIDEO_CHANGED",
-    VIDEO_CHANGED_ERROR: "VIDEO_CHANGED_ERROR"
+    VIDEO_CHANGED_ERROR: "VIDEO_CHANGED_ERROR",
 }
 
 export const YOUTUBE_WINDOWS_ACTIONS = {
     ADD_WINDOW: "ADD_WINDOW",
     REMOVE_WINDOW: "REMOVE_WINDOW"
 }
-
 
 @Injectable()
 export class YoutubeWindowActions {
@@ -67,10 +66,13 @@ export class YoutubeWindowActions {
                     apiResponse: videoData.apiResponse,
                 }
             });
-        }).catch(() =>
-            this.ngRedux.dispatch({
+        }).catch((err) => {
+            console.log(err);
+            return this.ngRedux.dispatch({
                 type: YOUTUBE_WINDOW_ACTIONS.SEARCHING_FAILED
-            })).subscribe();
+            })
+        }).subscribe();
+
     }
 
     initYoutubeWindow(playerId: string) {
