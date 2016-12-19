@@ -37,7 +37,7 @@ const INIT_STATE_WINDOW = {
 }
 
 const INIT_STATE_WINDOWS = {
-    playerWindows: List<IYoutubeWindowState>([])
+    playerWindows: List<IYoutubeWindowState>()
 }
 
 

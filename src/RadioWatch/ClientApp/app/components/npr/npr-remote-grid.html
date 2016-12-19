@@ -1,26 +1,44 @@
-<div class="create-space">
-    <div class="container-fluid">
-        <form class="col-xs-12" (submit)="onSubmit()" #nprQueryForm="ngForm">
-            <div class="form-group col-xs-4">
-                <label for="queryDate">Date</label>
-                <input class="form-control" required [(ngModel)]="searchFormModel.queryDate" name="queryDate" type="date" id="queryDate"
-                    #queryDate="ngModel" />
+<h1 class="title">
+    Evening Music
+</h1>
+<h2 class="subtitle">
+    Select the program date or use the search box to search for tracks matching the terms provided before the selected date.
+</h2>
+<div class="content pad-top-md">
+    <form (submit)="onSubmit()" #nprQueryForm="ngForm">
+        <div class="columns">
+            <div class="column is-5">
+                <label class="label has-text-left">Date</label>
+                <p class="control">
+                    <input class="input" required [(ngModel)]="searchFormModel.queryDate" name="queryDate" type="date" id="queryDate" #queryDate="ngModel"
+                    />
+                </p>
             </div>
-            <div class="form-group col-xs-4">
-                <label for="queryTerm">Search</label>
-                <input class="form-control" [(ngModel)]="searchFormModel.queryTerm" name="queryTerm" type="text" id="queryTerm" placeholder="search..."
-                    #queryTerm="ngModel" />
+            <div class="column is-5">
+                <label class="label has-text-left">Search</label>
+                <p class="control">
+                    <input class="input" [(ngModel)]="searchFormModel.queryTerm" name="queryTerm" type="text" id="queryTerm" placeholder="search..."
+                        #queryTerm="ngModel" />
+                </p>
             </div>
 
-            <button *ngIf="(action$ | async) !== 'fetching'" [disabled]="!nprQueryForm.form.valid" type="submit" class="btn btn-primary">
-               Go
-            </button>
-            <div *ngIf="(action$ | async) === 'fetching'">
-                <i class="fa fa-cog fa-spin fa-3x fa-fw"></i>
-                <span class="sr-only">Loading...</span>
+            <div class="column is-2">
+                <button *ngIf="(action$ | async) !== 'SEARCHING'" [disabled]="!nprQueryForm.form.valid" type="submit" class="button is-primary is-pulled-left">
+                     <span class="icon">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </span>
+                    <span>Go</span>
+                </button>
+                <div *ngIf="(action$ | async) === 'SEARCHING'" class="is-pulled-left">
+                    <i class="fa fa-cog fa-spin fa-3x fa-fw" aria-hidden="true"></i>
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
-        </form>
-    </div>
-    <phx-remote-grid [init]='init' [dataSourceChanged]='dataSource$' [dataExtractionDevice]='dataGetter$'>
-    </phx-remote-grid>
+        </div>
+
+
+    </form>
 </div>
+
+<phx-remote-grid [init]='init' [dataSourceChanged]='dataSource$' [dataExtractionDevice]='dataGetter$' [extraData]='extraDataSubject$'>
+</phx-remote-grid>

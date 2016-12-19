@@ -18,7 +18,8 @@ export const PHX_REMOTE_GRID_ACTIONS = {
     PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS: 'PHX_REMOTE_GRID_PAGE_CHANGE_SUCCESS',
     PHX_REMOTE_GRID_UI_PAGINATION_UPDATED: 'PHX_REMOTE_GRID_UI_PAGINATION_UPDATED',
     PHX_REMOTE_GRID_ROW_EXPANDED: 'PHX_REMOTE_GRID_ROW_EXPANDED',
-    PHX_REMOTE_GRID_ROW_COLLAPSED: 'PHX_REMOTE_GRID_ROW_COLLAPSED'
+    PHX_REMOTE_GRID_ROW_COLLAPSED: 'PHX_REMOTE_GRID_ROW_COLLAPSED',
+    PHX_REMOTE_GRID_STORE_EXTRA_DATA: 'PHX_REMOTE_GRID_STORE_EXTRA_DATA'
 }
 
 export interface GridDataSourceBuilder {
@@ -42,10 +43,18 @@ export class PhxRmtGridActions {
         });
     }
 
+    phxGridStoreExtraData(extraData: any){
+        if (extraData !== undefined && extraData && JSON.stringify(extraData) !== '{}')
+        this.ngRedux.dispatch({
+            type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_STORE_EXTRA_DATA,
+            payload: extraData
+        })
+    }
+
     phxGridRead(request: IPhxRmtGridRequest, dataExtractionDevice: Observable<any>) {
         this.ngRedux.dispatch({
             type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_PENDING,
-            payload: Object.assign({},request, {action:'fetching'} ) 
+            payload: Object.assign({},request, {action:'SEARCHING'} ) 
         });
 
         //todo: optimize calls..
@@ -65,7 +74,7 @@ export class PhxRmtGridActions {
                         response: res,
                         data: gData,
                         total: totalR,
-                        action: ''
+                        action: totalR === 0 ? 'NO_RESULTS' : 'RESULTS_VALID'
                     }
                 });
             })
@@ -80,7 +89,7 @@ export class PhxRmtGridActions {
                 this.ngRedux.dispatch({
                     type: PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR,
                     payload: {
-                        action: ''
+                        action: 'SEARCH_ERROR'
                     }
                 }))
             .subscribe();

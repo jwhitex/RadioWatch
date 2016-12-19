@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { IPhxRmtGridInit, IPhxRmtGridInitColumn } from '../../actions';
 import { select } from 'ng2-redux';
 import { List } from 'immutable';
-import { BehaviorSubject, Observable, Observer } from 'rxjs';
+import { BehaviorSubject, Observable, Observer, Subscription } from 'rxjs';
 
 @Component({
     selector: 'npr-remote-grid',
@@ -11,20 +11,16 @@ import { BehaviorSubject, Observable, Observer } from 'rxjs';
     templateUrl: './npr-remote-grid.html',
     styleUrls: ['./npr-remote-grid.css']
 })
-export class PhalanxRemoteNprGridComponent implements OnInit {
-    @select(['phxRmtGrid','action']) action$: Observable<string>;
+export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
+    @select(['phxRmtGrid', 'action']) action$: Observable<string>;
+    @select(['phxRmtGrid','extraData']) extraData$: Observable<string>;
 
-    constructor() {
-        this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(null));
-        this.dataGetter$ = new Observable((observer) => {
-            try {
-                observer.next(this.dataExtractionProc);
-                observer.complete();
-            } catch(error) {
-                observer.error(error);
-            }
-        });
+    searchFormModel = {
+        queryDate: "",
+        queryTerm: ""
     }
+   
+    extraDataSubject$: BehaviorSubject<any>;
     dataSource$: BehaviorSubject<string>;
     dataGetter$: Observable<any>;
 
@@ -51,6 +47,10 @@ export class PhalanxRemoteNprGridComponent implements OnInit {
         return [[], 0];
     };
 
+    subscriptions: List<Subscription>;
+    constructor() {       
+    }
+
     cols: List<IPhxRmtGridInitColumn> = List<IPhxRmtGridInitColumn>([
         { colName: "id", dataName: "id", sortable: true, visible: false, date_pipe: null },
         { colName: "Played", dataName: "_duration", sortable: true, visible: false, date_pipe: null },
@@ -69,21 +69,45 @@ export class PhalanxRemoteNprGridComponent implements OnInit {
         columns: this.cols
     }
 
-    searchFormModel = {
-        queryDate: "",
-        queryTerm: ""
+    ngOnInit(){
+        this.subscriptions = List<Subscription>([]);
+        this.subscriptions = this.subscriptions.push(this.extraData$.subscribe((next) => {
+            if (next !== undefined && next){
+                let queryKeys = JSON.parse(next);
+                if (queryKeys !== undefined && queryKeys && JSON.stringify(queryKeys) !== '{}')
+                {
+                    this.searchFormModel.queryDate = queryKeys.queryDate;
+                    this.searchFormModel.queryTerm = queryKeys.queryTerm;
+                    if (!this.dataSource$){
+                        console.log("new behavior sub..")
+                        this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource({ date: queryKeys.queryDate, keyword: queryKeys.queryTerm }));
+                    }
+                } else {
+                    if (!this.dataSource$){
+                        this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(null));
+                        this.searchFormModel.queryDate = this.getInitialDateForPicker();
+                    }
+                }
+            }
+        }));
+        this.dataGetter$ = new Observable((observer) => {
+            try {
+                observer.next(this.dataExtractionProc);
+                observer.complete();
+            } catch(error) {
+                observer.error(error);
+            }
+        });
+        this.extraDataSubject$ = new BehaviorSubject<any>({});
     }
-
-    ngOnInit() {
-        this.searchFormModel.queryDate = this.getInitialDateForPicker();
-    }
-
+    
     onSubmit() {
         if (this.searchFormModel.queryTerm !== "") {
             this.dateSearch(this.searchFormModel.queryDate);
         } else {
             this.keywordDateSearch(this.searchFormModel.queryDate, this.searchFormModel.queryTerm);
         }
+        this.extraDataSubject$.next(this.searchFormModel);
     }
 
     dateSearch(date: string) {
@@ -115,6 +139,10 @@ export class PhalanxRemoteNprGridComponent implements OnInit {
         } else {
             return ''
         }
+    }
+
+    ngOnDestroy(){
+        this.subscriptions.forEach((value) => value.unsubscribe());
     }
     
     //init

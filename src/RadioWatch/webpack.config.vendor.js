@@ -25,8 +25,7 @@ var sharedConfig = {
             '@angular/platform-server',
             'angular2-universal',
             'angular2-universal-polyfills',
-            'bootstrap',
-            'bootstrap/dist/css/bootstrap.css',
+            'bulma/css/bulma.css',
             'es6-shim',
             'es6-promise',
             'event-source-polyfill',
@@ -40,7 +39,7 @@ var sharedConfig = {
         library: '[name]_[hash]'
     },
     plugins: [
-        new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+        //new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
         new webpack.ContextReplacementPlugin(/\@angular\b.*\b(bundles|linker)/, path.join(__dirname, './ClientApp')), // Workaround for https://github.com/angular/angular/issues/11580
         new webpack.IgnorePlugin(/^vertx$/), // Workaround for https://github.com/stefanpenner/es6-promise/issues/100
         new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
@@ -51,7 +50,8 @@ var clientBundleConfig = merge(sharedConfig, {
     output: { path: path.join(__dirname, 'wwwroot', 'dist') },
     module: {
         loaders: [
-            { test: /\.css(\?|$)/, loader: extractCSS.extract(['css-loader']) }
+            { test: /\.css(\?|$)/, loader: extractCSS.extract(['css-loader']) },
+            { test: /\.sass(\?|$)/, loader: extractCSS.extract(['style-loader','css-loader','sass-loader']) },
         ]
     },
     plugins: [
@@ -74,7 +74,10 @@ var serverBundleConfig = merge(sharedConfig, {
         libraryTarget: 'commonjs2',
     },
     module: {
-        loaders: [ { test: /\.css(\?|$)/, loader: 'to-string-loader!css-loader' } ]
+        loaders: [ 
+                   { test: /\.css(\?|$)/, loader: 'to-string-loader!css-loader' },
+                   { test: /\.sass(\?|$)/, loader: 'style-loader!css-loader!sass-loader'},
+         ]
     },
     entry: { vendor: ['aspnet-prerendering'] },
     plugins: [

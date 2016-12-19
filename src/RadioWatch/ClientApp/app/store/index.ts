@@ -21,18 +21,18 @@ export const rootReducer = combineReducers<IAppState>({
 
 function slicer(paths: any) {
     return (state) => {
-        let subset = {}
+        let subset = state;
         return subset;
     }
 }
 
 const config = {
-    key: "local",
+    key: "localAppState",
     slicer: slicer
 }
 
 export const enhancers = [
-    persistState("appConfig", config)
+    persistState("appState", config)
 ];
 
 //reducer pojos

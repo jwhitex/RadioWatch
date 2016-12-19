@@ -22,11 +22,7 @@ namespace RadioWatch
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-
-            if (env.IsDevelopment())
-            {
                 builder.AddJsonFile("config.json");
-            }
 
             Configuration = builder.Build();
         }
@@ -41,11 +37,16 @@ namespace RadioWatch
             services.AddMvc();
 
             var builder = DiConfig.Setup();
-            builder.Register(c => LoggerConfig.Setup(c.Resolve<ConfigTokenHandler<SeqUriToken>>())).As<Serilog.ILogger>().SingleInstance().AutoActivate();
+            builder.Register(c => LoggerConfig.Setup(c.Resolve<ConfigTokenHandler<SeqUriToken>>())).As<Serilog.ILogger>().SingleInstance();
             builder.Register(c => Configuration).As<IConfigurationRoot>().SingleInstance();
 
             builder.Populate(services);
             ApplicationContainer = builder.Build();
+            using (var lifetimeScope = ApplicationContainer.BeginLifetimeScope()){
+                 var logger = lifetimeScope.Resolve<Serilog.ILogger>();
+                 logger.Information("Application Starting..");
+            }
+
             return new AutofacServiceProvider(ApplicationContainer);
         }
 

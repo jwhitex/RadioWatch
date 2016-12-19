@@ -19,7 +19,8 @@ export interface IPhxRmtGridState {
     paginationButtonColors: List<IPhxRmtGridPaginationState>;
     dataSource: string;
     //initial settings...
-    setting: IPhxRmtGridSettingState
+    setting: IPhxRmtGridSettingState;
+    extraData: string;
 }
 
 export interface IPhxRmtGridSettingState {
@@ -63,12 +64,14 @@ const INIT_STATE: IPhxRmtGridState = {
     paginationWidth: '',
     paginationButtonColors: List<IPhxRmtGridPaginationState>([]),
     dataSource: '',
+    extraData: '{}',
     setting: {
         allowDelete: false,
         allowSorting: false,
         columns: List<IPhxRmtGridColumnState>([]),
         initialPage: 0,
     }
+    
 }
 
 
@@ -158,8 +161,14 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_READ_ERROR:
             return tassign(state, {
-                page: ap.action
+                action: ap.action
             });
+
+        case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_STORE_EXTRA_DATA:
+            return tassign(state, {
+                extraData: JSON.stringify(ap)
+            });
+
         //todo: error actions
         default:
             return state;

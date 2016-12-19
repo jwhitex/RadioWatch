@@ -21,7 +21,7 @@
     "angular2-universal-polyfills": "~2.0.11",
     "aspnet-prerendering": "^2.0.0",
     "aspnet-webpack": "^1.0.17",
-    "bootstrap": "^3.3.7",
+    "bulma": "^0.2.3",
     "css": "^2.2.1",
     "css-loader": "^0.25.0",
     "es6-shim": "^0.35.1",
@@ -32,7 +32,6 @@
     "html-loader": "^0.4.4",
     "immutable": "^3.8.1",
     "isomorphic-fetch": "^2.2.1",
-    "jquery": "^2.2.1",
     "json-loader": "^0.5.4",
     "ng2-redux": "^4.1.0",
     "node-noop": "^1.0.0",
@@ -62,6 +61,9 @@
     "karma-chrome-launcher": "^2.0.0",
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
-    "karma-webpack": "^1.8.0"
+    "karma-webpack": "^1.8.0",
+    "node-sass": "^4.0.0",
+    "sass-loader": "^4.1.0",
+    "webpack": "^1.14.0"
   }
 }

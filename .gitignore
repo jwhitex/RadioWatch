@@ -3,4 +3,4 @@ RadioWatch.sln
 global.json
 .vs/**
 .gitattributes
-
+.vscode/**

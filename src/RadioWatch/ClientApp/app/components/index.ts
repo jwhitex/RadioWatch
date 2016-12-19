@@ -1,5 +1,6 @@
 ﻿export { AppComponent } from './app';
 export { HomeComponent } from './home';
+export { AboutComponent } from './about';
 export { NavMenuComponent } from './navmenu';
 export { 
     PhalanxGridComponent, 
