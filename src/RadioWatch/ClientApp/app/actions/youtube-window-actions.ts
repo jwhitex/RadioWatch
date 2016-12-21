@@ -199,9 +199,9 @@ export class YoutubeWindowActions {
 
     private windowById(playerId: string) {
         const state = this.ngRedux.getState();
-        const playerWindow = fromJS(state.youtubeWindows.playerWindows).filter((value, key) => value.playerId === playerId).first();
-        if (typeof playerWindow === "undefined" || !playerWindow) {
-            console.log("NO PLAYER WINDOW..")
+        const playerWindow = fromJS(state.youtubeWindows.playerWindows).find((value, key) => value.playerId === playerId);
+        if (typeof playerWindow === undefined || !playerWindow) {
+            console.log("NO PLAYER WINDOW..");
         } else {
             return playerWindow;
         }

@@ -79,7 +79,6 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
                     this.searchFormModel.queryDate = queryKeys.queryDate;
                     this.searchFormModel.queryTerm = queryKeys.queryTerm;
                     if (!this.dataSource$){
-                        console.log("new behavior sub..")
                         this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource({ date: queryKeys.queryDate, keyword: queryKeys.queryTerm }));
                     }
                 } else {

@@ -2,14 +2,25 @@
     <thead>
         <tr>
             <th *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent }">
-                {{col.colName}}
-
-                <a [hidden]="by==-1 || !setting.allowSorting" (click)="sort(col.dataName,-1)">
-                    <div class="glyphicon glyphicon-menu-down"></div>
-                </a>
-                <a [hidden]="by==1 || !setting.allowSorting" (click)="sort(col.dataName,1)">
-                    <div class="glyphicon glyphicon-menu-up"></div>
-                </a>
+                <div class="columns">
+                    <div class="column is-1" *ngIf="by==1 || !setting.allowSorting">
+                        <a (click)="sort(col.dataName,-1)">
+                            <span class="icon is-small">
+                        <i class="fa fa-sort-alpha-desc" aria-hidden="true"></i>
+                        </span>
+                        </a>
+                    </div>
+                    <div class="column is-1" *ngIf="by==-1 || !setting.allowSorting">
+                        <a (click)="sort(col.dataName,1)">
+                            <span class="icon is-small">
+                        <i class="fa fa-sort-alpha-asc" aria-hidden="true"></i>
+                    </span>
+                        </a>
+                    </div>
+                    <p class="column has-text-centered">
+                        {{col.colName}}
+                    </p>
+                </div>
             </th>
 
             <th [hidden]="!setting.allowDelete"></th>
@@ -21,32 +32,41 @@
     <div *ngIf="c.data.isExpansionRowPhxRmtGrid">
         <phx-rmt-grid-expansion [rowData]="displayData.get(i-1)"></phx-rmt-grid-expansion>
     </div>
-    <table class="table" *ngIf="!c.data.isExpansionRowPhxRmtGrid" [@fadeIn]="whenGridPopulating">
-        <td>
-            <a (click)="expandOrCollapseRow(c,i)"> <i class="glyphicon glyphicon-resize-vertical"></i></a>
-        </td>
-        <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent}">
-            <phx-remote-grid-block [value]="c.data[col.dataName]"></phx-remote-grid-block>
-        </td>
-        <td [hidden]="!setting.allowDelete">
-            <a (click)="deleteRow(c)">
-                <i class="glyphicon glyphicon-trash"></i>
-            </a>
-        </td>
+    <table class="table" *ngIf="!c.data.isExpansionRowPhxRmtGrid" [@fadeIn]="whenGridPopulating" (click)="expandOrCollapseRow(c,i)">
+        <tbody>
+            <td class="is-icon">               
+                <i class="fa fa-music" aria-hidden="true"></i>
+            </td>
+            <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent}">
+                <phx-remote-grid-block [value]="c.data[col.dataName]"></phx-remote-grid-block>
+            </td>
+            <td [hidden]="!setting.allowDelete">
+                <a (click)="deleteRow(c)">
+                    <span class="icon">
+                    <i class="fa fa-trash" aria-hidden="true"></i>
+                </span>
+                </a>
+            </td>
+        </tbody>
     </table>
 </div>
 
-
-<div class="btn-group" style="margin: 0px auto;" [ngStyle]="{'width': paginationWidth}">
-    <button class="btn btn-primary" (click)="changePage(page-1)" type="button" [disabled]="(page-1)<0">
-
-        <div class="glyphicon glyphicon-arrow-left"></div>
-    </button>
-    <button *ngFor="let pageIndex of pages; let ix = index;" (click)="changePage(pageIndex-1)" class="btn btn-primary" type="button"
-        [ngStyle]="{'background-color': paginationButtonColors.get(ix).background, 'color': paginationButtonColors.get(ix).character}">
+<nav class="pagination">
+    <a [ngClass]="['button', page-1<0 ? 'is-disabled' : '' ]" (click)="changePage(page-1)">
+        <span class="icon">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+    </span>
+    </a>
+    <a [ngClass]="['button', page+2>pages.size ? 'is-disabled' : '' ]" (click)="changePage(page+1)">
+        <span class="icon">
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+    </span>
+    </a>
+    <ul>
+        <li *ngFor="let pageIndex of pages; let ix = index;">
+            <a [ngClass]="['button', paginationButtonColors.get(ix).background === '#fff' ? 'is-primary' : '' ]" (click)="changePage(pageIndex-1)">
             {{pageIndex}}
-    </button>
-    <button class="btn btn-primary" (click)="changePage(page+1)" type="button" [disabled]="page+2>pages.size">
-        <div class="glyphicon glyphicon-arrow-right"></div>
-    </button>
-</div>
+        </a>
+        </li>
+    </ul>
+</nav>
