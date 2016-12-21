@@ -46,12 +46,12 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
     switch (action.type) {
         case YOUTUBE_WINDOWS_ACTIONS.ADD_WINDOW:
             return tassign(state, {
-                playerWindows: fromJS(state.playerWindows).push(tassign(INIT_STATE_WINDOW as IYoutubeWindowState, { playerId: ap }))
+                playerWindows: List<IYoutubeWindowState>(fromJS(state.playerWindows).push(tassign(INIT_STATE_WINDOW as IYoutubeWindowState, { playerId: ap })))
             });
         case YOUTUBE_WINDOWS_ACTIONS.REMOVE_WINDOW:
             const index = state.playerWindows.findIndex((value, key) => value.playerId === ap);
             return tassign(state, {
-                playerWindows:  fromJS(state.playerWindows).remove(index)
+                playerWindows: List<IYoutubeWindowState>(fromJS(state.playerWindows).remove(index))
             })
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_IN_PROG:
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_SUCCESS:
@@ -63,7 +63,7 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
         case YOUTUBE_WINDOW_ACTIONS.PLAYER_LOADED:
         case YOUTUBE_WINDOW_ACTIONS.PLAYER_STATE_CHANGE:
             return tassign(state, {
-                playerWindows: fromJS(state.playerWindows).map(t => youtubeWindowReducer(t, action)).toList()
+                playerWindows: List<IYoutubeWindowState>(fromJS(state.playerWindows).map(t => youtubeWindowReducer(t, action)))
             });
         default:
             return state;

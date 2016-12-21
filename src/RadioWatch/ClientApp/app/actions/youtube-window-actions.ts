@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IAppState } from '../store';
 import { NgRedux } from 'ng2-redux';
-import { List } from 'immutable';
+import { List, fromJS } from 'immutable';
 import { ApiService } from '../services'
 import { Observable, Subscription, Subject } from 'rxjs';
 import { YoutubeService } from '../services';
@@ -140,7 +140,7 @@ export class YoutubeWindowActions {
     changeVideo(playerId: string, videoId: string, dataExtractor: Observable<any>) {
         const playerWindow = this.windowById(playerId);
         let videoData: any;
-        var videoFound = playerWindow.videos.find((val, key, number) => {
+        var videoFound = fromJS(playerWindow.videos).find((val, key, number) => {
             const sub = dataExtractor.subscribe((next) => {
                 videoData = next(val);
             }, (err) => {
@@ -199,7 +199,7 @@ export class YoutubeWindowActions {
 
     private windowById(playerId: string) {
         const state = this.ngRedux.getState();
-        const playerWindow = state.youtubeWindows.playerWindows.filter((value, key) => value.playerId === playerId).first();
+        const playerWindow = fromJS(state.youtubeWindows.playerWindows).filter((value, key) => value.playerId === playerId).first();
         if (typeof playerWindow === "undefined" || !playerWindow) {
             console.log("NO PLAYER WINDOW..")
         } else {

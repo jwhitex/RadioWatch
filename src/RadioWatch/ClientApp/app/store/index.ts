@@ -19,9 +19,14 @@ export const rootReducer = combineReducers<IAppState>({
     appConfig: appConfigReducer
 });
 
+//remove youtube state from local storage..
 function slicer(paths: any) {
     return (state) => {
-        let subset = state;
+        let subset = {
+            phxGrid: state.phxGrid,
+            phxRmtGrid: state.phxRmtGrid,
+            appConfig: state.appConfig
+        };
         return subset;
     }
 }
