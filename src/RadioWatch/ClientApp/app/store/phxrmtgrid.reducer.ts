@@ -1,4 +1,4 @@
-import { List } from 'immutable';
+import { List, fromJS } from 'immutable';
 import { tassign } from 'tassign';
 import { PHX_REMOTE_GRID_ACTIONS } from '../actions/phalanxremotegrid.actions';
 
@@ -52,23 +52,23 @@ export interface IPhxRmtGridItemState {
 const INIT_STATE: IPhxRmtGridState = {
     id: '',
     response: {},
-    data: List<IPhxRmtGridItemState>([]),
-    displayData: List<IPhxRmtGridItemState>([]),
+    data: List<IPhxRmtGridItemState>(),
+    displayData: List<IPhxRmtGridItemState>(),
     page: 0,
     pageSize: 10,
     sort: '',
     by: 1,
     totalRows: 0,
-    pages: List<number>([]),
+    pages: List<number>(),
     action: '',
     paginationWidth: '',
-    paginationButtonColors: List<IPhxRmtGridPaginationState>([]),
+    paginationButtonColors: List<IPhxRmtGridPaginationState>(),
     dataSource: '',
     extraData: '{}',
     setting: {
         allowDelete: false,
         allowSorting: false,
-        columns: List<IPhxRmtGridColumnState>([]),
+        columns: List<IPhxRmtGridColumnState>(),
         initialPage: 0,
     }
     
@@ -132,7 +132,7 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                 paginationButtonColors: ap.paginationButtonColors
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_ROW_EXPANDED:
-            let data = state.displayData.insert(ap.atIndexInsert, { data: { parentKeyPhxRmtGrid: ap.key, isExpansionRowPhxRmtGrid: true } });
+            let data = fromJS(state.displayData).insert(ap.atIndexInsert, { data: { parentKeyPhxRmtGrid: ap.key, isExpansionRowPhxRmtGrid: true } });
             return tassign(state, {
                 displayData: data.map((x) => {
                     if (x.key === ap.key) {
@@ -142,7 +142,7 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                 })
             });
         case PHX_REMOTE_GRID_ACTIONS.PHX_REMOTE_GRID_ROW_COLLAPSED:
-            let indexOfParent = state.displayData.findIndex((value, key) => {
+            let indexOfParent = fromJS(state.displayData).findIndex((value, key) => {
                 if (typeof value.data.parentKeyPhxRmtGrid !== "undefined") {
                     if (ap.key === value.data.parentKeyPhxRmtGrid) {
                         return true;
@@ -150,7 +150,7 @@ export function phxRmtGridReducer(state = INIT_STATE, action): IPhxRmtGridState 
                 }
                 return false;
             });
-            data = state.displayData.remove(indexOfParent);
+            data = fromJS(state.displayData).remove(indexOfParent);
             return tassign(state, {
                 displayData: data.map((x) => {
                     if (x.key === ap.key) {

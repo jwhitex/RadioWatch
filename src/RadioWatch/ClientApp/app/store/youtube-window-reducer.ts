@@ -1,5 +1,5 @@
 import { YOUTUBE_WINDOW_ACTIONS, YOUTUBE_WINDOWS_ACTIONS } from '../actions/youtube-window-actions';
-import { List } from 'immutable';
+import { List, fromJS } from 'immutable';
 import { tassign } from 'tassign';
 
 export interface IYoutubeWindowsState {
@@ -46,12 +46,12 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
     switch (action.type) {
         case YOUTUBE_WINDOWS_ACTIONS.ADD_WINDOW:
             return tassign(state, {
-                playerWindows: state.playerWindows.push(tassign(INIT_STATE_WINDOW, { playerId: ap }))
+                playerWindows: fromJS(state.playerWindows).push(tassign(INIT_STATE_WINDOW as IYoutubeWindowState, { playerId: ap }))
             });
         case YOUTUBE_WINDOWS_ACTIONS.REMOVE_WINDOW:
             const index = state.playerWindows.findIndex((value, key) => value.playerId === ap);
             return tassign(state, {
-                playerWindows: state.playerWindows.remove(index)
+                playerWindows:  fromJS(state.playerWindows).remove(index)
             })
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_IN_PROG:
         case YOUTUBE_WINDOW_ACTIONS.SEARCHING_SUCCESS:
@@ -63,7 +63,7 @@ export function youtubeWindowsReducer(state = INIT_STATE_WINDOWS, action): IYout
         case YOUTUBE_WINDOW_ACTIONS.PLAYER_LOADED:
         case YOUTUBE_WINDOW_ACTIONS.PLAYER_STATE_CHANGE:
             return tassign(state, {
-                playerWindows: state.playerWindows.map(t => youtubeWindowReducer(t, action)).toList()
+                playerWindows: fromJS(state.playerWindows).map(t => youtubeWindowReducer(t, action)).toList()
             });
         default:
             return state;
