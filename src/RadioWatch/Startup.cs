@@ -22,7 +22,8 @@ namespace RadioWatch
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-                builder.AddJsonFile("config.json");
+
+            builder.AddJsonFile("config.json");
 
             Configuration = builder.Build();
         }
@@ -42,9 +43,10 @@ namespace RadioWatch
 
             builder.Populate(services);
             ApplicationContainer = builder.Build();
-            using (var lifetimeScope = ApplicationContainer.BeginLifetimeScope()){
-                 var logger = lifetimeScope.Resolve<Serilog.ILogger>();
-                 logger.Information("Application Starting..");
+            using (var lifetimeScope = ApplicationContainer.BeginLifetimeScope())
+            {
+                var logger = lifetimeScope.Resolve<Serilog.ILogger>();
+                logger.Information("Application Starting..");
             }
 
             return new AutofacServiceProvider(ApplicationContainer);
@@ -53,8 +55,6 @@ namespace RadioWatch
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IApplicationLifetime appLifetime)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
             //Good post on exception filter...
             //https://weblog.west-wind.com/posts/2016/Oct/16/Error-Handling-and-ExceptionFilter-Dependency-Injection-for-ASPNET-Core-APIs
             loggerFactory.AddSerilog();
