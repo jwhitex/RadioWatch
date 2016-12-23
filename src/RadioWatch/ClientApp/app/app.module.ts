@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UniversalModule } from 'angular2-universal';
 import { providers } from './app.providers';
-//import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
     AppComponent,
@@ -10,8 +10,8 @@ import {
     HomeComponent,
     AboutComponent,
     //PhalanxGridExampleComponent,
-    PhalanxRemoteNprGridComponent,
     //TestDisplayComponent
+    PhalanxRemoteNprGridComponent,
 } from './components';
 import { containerDeclarations } from './app.declarations';
 import { NgReduxModule } from 'ng2-redux';
@@ -36,7 +36,8 @@ import { NgReduxModule } from 'ng2-redux';
         ])
     ],
     providers: [
-        ...providers
+        ...providers,
+        {provide: LocationStrategy, useClass: HashLocationStrategy}
     ]
 })
 export class AppModule {
