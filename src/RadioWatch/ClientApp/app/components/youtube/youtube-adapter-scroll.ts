@@ -1,9 +1,10 @@
 import { Component, Input, Output, OnDestroy, OnInit, EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { IYoutubeSearch, YoutubeWindowActions } from '../../actions';
-import { IAppState, IYoutubeWindowState, IAppConfigState } from '../../store';
+import { IAppState, IYoutubeWindowState } from '../../store';
 import { List } from 'immutable';
 import { NgRedux, select } from 'ng2-redux';
+let config = require('config');
 
 @Component({
     selector: 'youtube-adapter-scroll',
@@ -18,18 +19,12 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
     //todo: also resolving this in child component?
     playerWindowReady$: Observable<boolean>;
 
-    //get googleToken
-    @select(['appConfig']) appConfig$: Observable<IAppConfigState>;
-    appConfig: IAppConfigState;
-
     constructor(private youtubeActions: YoutubeWindowActions, private ngRedux: NgRedux<IAppState>) {
         let min = 1000;
         let max = 100000
         const val = Math.floor(Math.random() * (max - min)) + min;
         this.playerId = `youtubePlayerIdGen_${val}`;
-        this.youtubeActions.addYoutubeWindow(this.playerId);
-        
-        this.appConfig$.subscribe((value) => this.appConfig = value);
+        this.youtubeActions.addYoutubeWindow(this.playerId);       
     }
 
     @Input() playerId: string;
@@ -40,7 +35,7 @@ export class YoutubeAdapterScrollComponent implements OnInit, OnDestroy {
             return {
                 searchTerm: this.searchTerm,
                 pageToken: null,
-                googleToken: this.appConfig.youtubeApiToken,
+                googleToken: config.youtubeApiToken,
                 maxResults: 10
             } as IYoutubeSearch;
         }

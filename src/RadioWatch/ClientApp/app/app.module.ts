@@ -9,9 +9,9 @@ import {
     NavMenuComponent,
     HomeComponent,
     AboutComponent,
-    PhalanxGridExampleComponent,
+    //PhalanxGridExampleComponent,
     PhalanxRemoteNprGridComponent,
-    TestDisplayComponent
+    //TestDisplayComponent
 } from './components';
 import { containerDeclarations } from './app.declarations';
 import { NgReduxModule } from 'ng2-redux';
@@ -30,8 +30,8 @@ import { NgReduxModule } from 'ng2-redux';
             { path: 'home', component: HomeComponent },
             { path: 'evening-music', component: PhalanxRemoteNprGridComponent },
             { path: 'about', component: AboutComponent },
-            { path: 'example', component: PhalanxGridExampleComponent },
-            { path: 'test', component: TestDisplayComponent },
+            //{ path: 'example', component: PhalanxGridExampleComponent },
+            //{ path: 'test', component: TestDisplayComponent },
             { path: '**', redirectTo: 'home' }
         ])
     ],

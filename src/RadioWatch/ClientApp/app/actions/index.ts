@@ -18,6 +18,3 @@ export {
     IYoutubeSearchResponse,
     IYoutubeSearch
 } from './youtube-window-actions';
-export {
-    AppConfigActions
-} from './app-config-actions'
