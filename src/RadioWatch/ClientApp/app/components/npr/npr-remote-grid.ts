@@ -54,10 +54,10 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     cols: List<IPhxRmtGridInitColumn> = List<IPhxRmtGridInitColumn>([
         { colName: "id", dataName: "id", sortable: true, visible: false, date_pipe: null },
         { colName: "Played", dataName: "_duration", sortable: true, visible: false, date_pipe: null },
-        { colName: "Start", dataName: "_start_time", sortable: true, visible: false, date_pipe: "MM/dd/yyyy" },
         { colName: "Track", dataName: "trackName", sortable: true, visible: true, date_pipe: null },
         { colName: "Artist", dataName: "artistName", sortable: true, visible: true, date_pipe: null },
         { colName: "Collection", dataName: "collectionName", sortable: true, visible: true, date_pipe: null },
+        { colName: "Date", dataName: "_start_time", sortable: true, visible: true, date_pipe: "MM/dd/yyyy" },
     ]);
 
     init: IPhxRmtGridInit = {
@@ -102,9 +102,9 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     
     onSubmit() {
         if (this.searchFormModel.queryTerm !== "") {
-            this.dateSearch(this.searchFormModel.queryDate);
-        } else {
             this.keywordDateSearch(this.searchFormModel.queryDate, this.searchFormModel.queryTerm);
+        } else {
+            this.dateSearch(this.searchFormModel.queryDate);
         }
         this.extraDataSubject$.next(this.searchFormModel);
     }

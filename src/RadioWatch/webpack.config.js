@@ -6,7 +6,12 @@ var merge = require('webpack-merge');
 // Configuration in common to both client-side and server-side bundles
 var sharedConfig = {
     context: __dirname,
-    resolve: { extensions: [ '', '.js', '.ts' ] },
+    resolve: { 
+        extensions: [ '', '.js', '.ts' ],
+        alias: {
+            config: path.join(__dirname, 'ClientAppConfig', process.env.NODE_ENV)
+        }
+    },
     output: {
         filename: '[name].js',
         publicPath: '/dist/' // Webpack dev middleware, if enabled, handles requests for this URL prefix

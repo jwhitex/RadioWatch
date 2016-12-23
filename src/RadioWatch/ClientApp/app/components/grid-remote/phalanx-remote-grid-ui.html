@@ -17,7 +17,7 @@
                     </span>
                         </a>
                     </div>
-                    <p class="column has-text-centered">
+                    <p class="column has-text-left">
                         {{col.colName}}
                     </p>
                 </div>
@@ -38,7 +38,7 @@
                 <i class="fa fa-music" aria-hidden="true"></i>
             </td>
             <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent}">
-                <phx-remote-grid-block [value]="c.data[col.dataName]"></phx-remote-grid-block>
+                <phx-remote-grid-block [value]="col.date_pipe != null ? (c.data[col.dataName] | date:col.date_pipe) : c.data[col.dataName]"></phx-remote-grid-block>
             </td>
             <td [hidden]="!setting.allowDelete">
                 <a (click)="deleteRow(c)">

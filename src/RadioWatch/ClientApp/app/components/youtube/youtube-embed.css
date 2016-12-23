@@ -59,6 +59,13 @@
     border: 0;
 }
 
+.bring-forward-dark {
+  height: 100%;
+  width: 100%;
+  z-index: 90;
+  background-color: black;
+}
+
 .image-wrap {
   position: relative;
   display: inline-block;

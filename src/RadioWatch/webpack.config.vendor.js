@@ -29,7 +29,6 @@ var sharedConfig = {
             'es6-shim',
             'es6-promise',
             'event-source-polyfill',
-            'jquery',
             'zone.js',
         ]
     },

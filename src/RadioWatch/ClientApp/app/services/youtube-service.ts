@@ -24,7 +24,7 @@ export class YoutubeService {
             tag.src = source;
             const firstScriptTag = ref[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            console.log("youtube scripts loaded");
+            //console.log("youtube scripts loaded");
         }
     }
 
@@ -64,12 +64,12 @@ export class YoutubeService {
     setupPlayer(playerElementId: string) {
         this.window['onYouTubeIframeAPIReady'] = () => {
             if (this.window['YT']) {
-                console.log('Youtube API is ready');
+                //console.log('Youtube API is ready');
                 return;
             }
         };
         if (this.window['YT'] && this.window.YT.Player) {
-            console.log('Youtube API is ready');
+            //console.log('Youtube API is ready');
             return;
         }
     }

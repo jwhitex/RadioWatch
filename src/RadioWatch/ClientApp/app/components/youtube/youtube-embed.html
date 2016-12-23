@@ -2,8 +2,8 @@
     <div class="row">
         <div style="height: 200px; width: 356px;">
             <div id="player" class="embed-responsive embed-responsive-16by9">
-                <div [id]="playerId" style="width: 100%" class="embed-responsive-item"></div>
-                <div class="embed-responsive-item" style="width: 100%; z-index: 90; background-color: black;" *ngIf="!playerWindow.showIframe">
+                <div [id]="playerId" style="height: 200px; width: 356px;" class="embed-responsive-item"></div>
+                <div class="embed-responsive-item" *ngIf="!playerWindow.showIframe">
                     <div class="image-wrap">
                         <img style="height: 200px; width: 356px;" src="{{playerWindow.imgUrl}}">
                     </div>
