@@ -3,6 +3,7 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,10 +22,8 @@ namespace RadioWatch
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("config.json", optional: true)
                 .AddEnvironmentVariables();
-
-            builder.AddJsonFile("config.json");
-
             Configuration = builder.Build();
         }
 
@@ -38,7 +37,7 @@ namespace RadioWatch
             services.AddMvc();
 
             var builder = DiConfig.Setup();
-            builder.Register(c => LoggerConfig.Setup(c.Resolve<ConfigTokenHandler<SeqUriToken>>())).As<Serilog.ILogger>().SingleInstance();
+            builder.Register(c => LoggerConfig.Setup(c.Resolve<ConfigTokenHandler<SeqUriToken>>(), c.Resolve<ConfigTokenHandler<LogFilePath>>(), c.Resolve<ConfigTokenHandler<LogToFile>>())).As<Serilog.ILogger>().SingleInstance();
             builder.Register(c => Configuration).As<IConfigurationRoot>().SingleInstance();
 
             builder.Populate(services);
@@ -70,6 +69,12 @@ namespace RadioWatch
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                
+                //Nginx Proxy
+                app.UseForwardedHeaders(new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                });
             }
 
             app.UseStaticFiles();

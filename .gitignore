@@ -4,3 +4,4 @@ global.json
 .vs/**
 .gitattributes
 **/.vscode/**
+hosting.json

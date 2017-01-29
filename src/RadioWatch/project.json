@@ -64,7 +64,9 @@
       "ClientApp/dist",
       "Views",
       "web.config",
-      "wwwroot"
+      "wwwroot",
+      "config.json",
+      "hosting.json"
     ],
     "exclude": [
       "wwwroot/dist/*.map"
