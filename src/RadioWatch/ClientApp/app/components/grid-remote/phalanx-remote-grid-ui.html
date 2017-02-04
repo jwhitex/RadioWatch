@@ -32,10 +32,10 @@
     <div *ngIf="c.data.isExpansionRowPhxRmtGrid">
         <phx-rmt-grid-expansion [rowData]="displayData.get(i-1)"></phx-rmt-grid-expansion>
     </div>
-    <table class="table" *ngIf="!c.data.isExpansionRowPhxRmtGrid" [@fadeIn]="whenGridPopulating" (click)="expandOrCollapseRow(c,i)">
+    <table class="table" *ngIf="!c.data.isExpansionRowPhxRmtGrid" [@fadeIn]="whenGridPopulating" >
         <tbody>
             <td class="is-icon">               
-                <i class="fa fa-music" aria-hidden="true"></i>
+                <a (click)="expandOrCollapseRow(c,i)"><i class="fa fa-music" aria-hidden="true"></i></a>
             </td>
             <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent}">
                 <phx-remote-grid-block [value]="col.date_pipe != null ? (c.data[col.dataName] | date:col.date_pipe) : c.data[col.dataName]"></phx-remote-grid-block>
