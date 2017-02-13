@@ -5,25 +5,30 @@
     Select the program date or use the search box to search for tracks matching the terms provided before the selected date.
 </h2>
 <div class="content pad-top-md">
-    <form (submit)="onSubmit()" #nprQueryForm="ngForm">
+    <form [formGroup]="nprQueryForm" (submit)="onSubmit()" >
         <div class="columns">
             <div class="column is-5">
-                <label class="label has-text-left">Date</label>
-                <p class="control">
-                    <input class="input" required [(ngModel)]="searchFormModel.queryDate" name="queryDate" type="date" id="queryDate" #queryDate="ngModel"
-                    />
+                <label for="queryDate" class="label has-text-left">Date</label>
+                <p [ngClass]="['control']">
+                    <input [ngClass]="['input', formErrors.queryDate ? 'is-danger' : '' ]" 
+                            required 
+                            formControlName="queryDate"
+                            type="date"
+                            id="queryDate"
+                            placeholder="yyyy-MM-dd"/>
+                
+                    <span class="help is-danger" *ngIf="formErrors.queryDate">{{ formErrors.queryDate }}</span>
                 </p>
             </div>
             <div class="column is-5">
                 <label class="label has-text-left">Search</label>
                 <p class="control">
-                    <input class="input" [(ngModel)]="searchFormModel.queryTerm" name="queryTerm" type="text" id="queryTerm" placeholder="search..."
-                        #queryTerm="ngModel" />
+                    <input class="input" formControlName="queryTerm" type="text" id="queryTerm" placeholder="search..."/>
                 </p>
             </div>
 
             <div class="column is-2">
-                <button *ngIf="(action$ | async) !== 'SEARCHING'" [disabled]="!nprQueryForm.form.valid" type="submit" class="button is-primary is-pulled-left">
+                <button *ngIf="(action$ | async) !== 'SEARCHING'" [disabled]="!nprQueryForm.valid" type="submit" class="button is-primary is-pulled-left">
                      <span class="icon">
                         <i class="fa fa-search" aria-hidden="true"></i>
                     </span>

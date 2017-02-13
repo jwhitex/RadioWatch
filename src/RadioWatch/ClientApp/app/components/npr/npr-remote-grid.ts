@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { IPhxRmtGridInit, IPhxRmtGridInitColumn } from '../../actions';
 import { select } from 'ng2-redux';
 import { List } from 'immutable';
@@ -9,17 +10,73 @@ import { BehaviorSubject, Observable, Observer, Subscription } from 'rxjs';
     selector: 'npr-remote-grid',
     providers: [AsyncPipe],
     templateUrl: './npr-remote-grid.html',
-    styleUrls: ['./npr-remote-grid.css']
+    styleUrls: ['./npr-remote-grid.css'],
 })
 export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     @select(['phxRmtGrid', 'action']) action$: Observable<string>;
-    @select(['phxRmtGrid','extraData']) extraData$: Observable<string>;
+    @select(['phxRmtGrid', 'extraData']) extraData$: Observable<string>;
+
+    nprQueryForm: FormGroup;
+
+    dateValidator() : ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} => {
+            const queryDate = control.value;
+            if (queryDate.length != 10)
+               return {'invalidDate': {queryDate}}
+            var timestamp=Date.parse(queryDate)
+            const no = isNaN(timestamp);
+            return no ? {'invalidDate': {queryDate}} : null;
+        };
+    }
+
+    buildForm(): void {
+        this.nprQueryForm = this.fb.group({
+        'queryDate': [this.searchFormModel.queryDate,
+            [ 
+                Validators.required,
+                this.dateValidator()
+            ]
+        ],
+        'queryTerm': [this.searchFormModel.queryTerm]
+        });
+
+        this.nprQueryForm.valueChanges.subscribe(data => this.onValueChanged(data));
+        this.onValueChanged(); // (re)set validation messages now
+    }
+
+    onValueChanged(data? : any) {
+        if (!this.nprQueryForm) { return; }
+        const form = this.nprQueryForm;
+        for (const field in this.formErrors) {
+            this.formErrors[field] = '';
+            const control = form.get(field);
+            if (control && control.dirty && !control.valid) {
+                const messages = this.validationMessages[field];
+                for (const key in control.errors) {
+                    this.formErrors[field] += messages[key] + ' ';
+                }
+            }
+        }
+    }
+
+    validationMessages = {
+        'queryDate': {
+            'required' : 'Date is required',
+            'invalidDate' : "Input is invalid. Format shoudld be 'yyyy-MM-dd'"
+        },
+        'queryTerm': {}
+    }
+
+    formErrors = {
+        'queryDate': '',
+        'queryTerm': ''
+    };
 
     searchFormModel = {
         queryDate: "",
         queryTerm: ""
     }
-   
+
     extraDataSubject$: BehaviorSubject<any>;
     dataSource$: BehaviorSubject<string>;
     dataGetter$: Observable<any>;
@@ -46,9 +103,9 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
         }
         return [[], 0];
     };
-
+    
     subscriptions: List<Subscription>;
-    constructor() {       
+    constructor(private fb: FormBuilder) {
     }
 
     cols: List<IPhxRmtGridInitColumn> = List<IPhxRmtGridInitColumn>([
@@ -69,20 +126,20 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
         columns: this.cols
     }
 
-    ngOnInit(){
+    ngOnInit() {
+        this.buildForm();
         this.subscriptions = List<Subscription>([]);
         this.subscriptions = this.subscriptions.push(this.extraData$.subscribe((next) => {
-            if (next !== undefined && next){
+            if (next !== undefined && next) {
                 let queryKeys = JSON.parse(next);
-                if (queryKeys !== undefined && queryKeys && JSON.stringify(queryKeys) !== '{}')
-                {
-                    this.searchFormModel.queryDate = queryKeys.queryDate;
+                if (queryKeys !== undefined && queryKeys && JSON.stringify(queryKeys) !== '{}') {
+                    this.searchFormModel.queryDate = queryKeys.queryDate
                     this.searchFormModel.queryTerm = queryKeys.queryTerm;
-                    if (!this.dataSource$){
-                        this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource({ date: queryKeys.queryDate, keyword: queryKeys.queryTerm }));
+                    if (!this.dataSource$) {
+                        this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(queryKeys.queryDate, queryKeys.queryTerm));
                     }
                 } else {
-                    if (!this.dataSource$){
+                    if (!this.dataSource$) {
                         this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(null));
                         this.searchFormModel.queryDate = this.getInitialDateForPicker();
                     }
@@ -93,13 +150,13 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
             try {
                 observer.next(this.dataExtractionProc);
                 observer.complete();
-            } catch(error) {
+            } catch (error) {
                 observer.error(error);
             }
         });
         this.extraDataSubject$ = new BehaviorSubject<any>({});
     }
-    
+
     onSubmit() {
         if (this.searchFormModel.queryTerm !== "") {
             this.keywordDateSearch(this.searchFormModel.queryDate, this.searchFormModel.queryTerm);
@@ -110,45 +167,46 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     }
 
     dateSearch(date: string) {
-        this.dataSource$.next(this.calcDataSource({ date: date }));
+        this.dataSource$.next(this.calcDataSource( date ));
     }
 
     keywordDateSearch(date: string, term: string) {
-        this.dataSource$.next(this.calcDataSource({ date: date, keyword: term }));
+        this.dataSource$.next(this.calcDataSource(date, term ));
     }
 
-    calcDataSource(obj: any): string {
+    calcDataSource(date: string, keyword?: string): string {
         const program_id = '52efef11e1c88f2f9b777447';
         const initialKey = '52efef04e1c88f2f9b77741b';
         const currentTicks = (new Date).getTime();
+        var formattedDate = this.dateYFirst(new Date(date))
 
-        if (!obj) {
-            const date = this.getInitialDateForPicker();
+        if (!date || !formattedDate || formattedDate=="") {
+            const today = this.getInitialDateForPicker();
             return "https://api.composer.nprstations.org/v1/widget/"
-                + `${initialKey}/playlist?t=${currentTicks}&prog_id=${program_id}&datestamp=${date}`
+                + `${initialKey}/playlist?t=${currentTicks}&prog_id=${program_id}&datestamp=${today}`
                 + "&order=1&errorMsg=No+results+found.+Please+modify+your+search+and+try+again.";
-        } else if (!!obj.date && !!obj.keyword && obj.keyword !== "") {
+        } else if (!!formattedDate && !!keyword && keyword !== "") {
             return "https://api.composer.nprstations.org/v1/widget/"
-                + `${initialKey}/playlist?t=${currentTicks}&prog_id=${program_id}&limit=400&keywords=${obj.keyword}&after=${obj.date}`
+                + `${initialKey}/playlist?t=${currentTicks}&prog_id=${program_id}&limit=400&keywords=${keyword}&after=${formattedDate}`
                 + "+21%3A04%3A33&numQueryMonths=1&minScore=5&maxQueryAttempts=4&errorMsg=No+results+found.+Please+modify+yoursearch+and+try+again.";
-        } else if (!!obj.date) {
+        } else if (!!formattedDate) {
             return "https://api.composer.nprstations.org/v1/widget/"
-                + `${initialKey}/playlist?t=${currentTicks}&prog_id=${program_id}&datestamp=${obj.date}`
+                + `${initialKey}/playlist?t=${currentTicks}&prog_id=${program_id}&datestamp=${formattedDate}`
                 + "&order=1&errorMsg=No+results+found.+Please+modify+your+search+and+try+again.";
         } else {
             return ''
         }
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.subscriptions.forEach((value) => value.unsubscribe());
     }
-    
+
     //init
     private getInitialDateForPicker() {
-        var clientDate = new Date();
-        var timeAsString = this.timeAsESTString();
-        var asInt = parseInt(timeAsString, 10);
+        let clientDate = new Date();
+        let timeAsString = this.timeAsESTString();
+        let asInt = parseInt(timeAsString, 10);
         if (asInt < 10) {
             clientDate.setDate(clientDate.getDate() - 1);
         };
@@ -158,24 +216,30 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     //date extensions. swap for momentjs
     private timeAsESTString() {
         const clientDate = new Date();
-        return (((clientDate.toLocaleTimeString("latn", { timeZone: "America/New_York" })).split(":"))[0]);
+        let formatOptions = { timeZone: "America/New_York" };
+        try {
+            return (((clientDate.toLocaleTimeString("latn", formatOptions)).split(":"))[0]);
+        } catch (ex) {
+            formatOptions = { timeZone: "UTC" };
+            return (((clientDate.toLocaleTimeString("latn", formatOptions)).split(":"))[0]);
+        }
     }
     private dateYFirst(date: Date) {
-        var day = date.getDate().toString();
+        let day = date.getDate().toString();
         day = day.length === 1 ? `0${day}` : day;
-        var month = (date.getMonth() + 1).toString(); //month is zero based!!
+        let month = (date.getMonth() + 1).toString(); //month is zero based!!
         month = month.length === 1 ? `0${month}` : month;
         return `${date.getFullYear()}-${month}-${day}`;
     }
     private dateMFirst(date: Date) {
-        var day = date.getDate().toString();
+        let day = date.getDate().toString();
         day = day.length === 1 ? `0${day}` : day;
-        var month = date.getMonth().toString();
+        let month = date.getMonth().toString();
         month = month.length === 1 ? `0${month}` : month;
         return `${date.getMonth()}/${day}/${month}`;
     }
     private convertObjectReadable(date: string) {
-        var dateParams = date.split("/");
+        let dateParams = date.split("/");
         if (dateParams && dateParams.length === 3) {
             return dateParams[1] + "-" + dateParams[2] + "-" + dateParams[0];
         } else {
@@ -190,5 +254,3 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
         }
     }
 }
-
-

@@ -3,13 +3,13 @@ import { RouterModule } from '@angular/router';
 import { UniversalModule } from 'angular2-universal';
 import { providers } from './app.providers';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
     AppComponent,
     NavMenuComponent,
     HomeComponent,
     AboutComponent,
-    PhalanxRemoteNprGridComponent,
+    PhalanxRemoteNprGridComponent
 } from './components';
 import { containerDeclarations } from './app.declarations';
 import { NgReduxModule } from 'ng2-redux';
@@ -21,7 +21,7 @@ import { NgReduxModule } from 'ng2-redux';
     ],
     imports: [
         UniversalModule, // Must be first import. This automatically imports BrowserModule, HttpModule, and JsonpModule too.
-        FormsModule,
+        ReactiveFormsModule,
         NgReduxModule.forRoot(),
         RouterModule.forRoot([
             { path: '', redirectTo: 'home', pathMatch: 'full' },
