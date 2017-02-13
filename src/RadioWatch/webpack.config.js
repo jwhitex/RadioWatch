@@ -3,13 +3,17 @@ var path = require('path');
 var webpack = require('webpack');
 var merge = require('webpack-merge');
 
+configAlias = () => {
+    return path.join(__dirname, 'ClientAppConfig', (process.env.NODE_ENV == undefined) ? 'development' : process.env.NODE_ENV)
+}
+
 // Configuration in common to both client-side and server-side bundles
 var sharedConfig = {
     context: __dirname,
     resolve: { 
         extensions: [ '', '.js', '.ts' ],
         alias: {
-            config: path.join(__dirname, 'ClientAppConfig', process.env.NODE_ENV)
+            config: configAlias()
         }
     },
     output: {

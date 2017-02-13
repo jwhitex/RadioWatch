@@ -2,25 +2,21 @@
     <div class="flex-container" style="height:30%">
         <div class="flex-column">
             <div class="flex-center" (wheel)="wheel($event)">
-                <div *ngIf="!leftKv.value">
-                    <div class="clear-gif"></div>
-                </div>
-                <div *ngIf="leftKv.value" class="perspective-left">
+                <div class="perspective-left">
                     <div class="transform-left">
-                        <img style="height: 200px; width: 356px;" src="{{leftKv.value}}">
+                        <img *ngIf="leftKv.value" style="height: 200px; width: 356px;" src="{{leftKv.value}}">
+                        <img *ngIf="!leftKv.value" style="height: 200px; width: 356px;" src="/img/clear.gif">
                     </div>
                 </div>
                 <div class="flex-center">
                     <youtube-window [searchParams]='searchTerm$' [playerId]='playerId' [videoIdFromScroll]="videoId$" (videoMetaData)="onVideoMetaDataChange($event)">
                     </youtube-window>
                 </div>
-                <div *ngIf="rightKv.value" class="perspective-right">
+                <div class="perspective-right">
                     <div class="transform-right">
-                        <img style="height: 200px; width: 356px;" src="{{rightKv.value}}">
+                        <img *ngIf="rightKv.value" style="height: 200px; width: 356px;" src="{{rightKv.value}}">
+                        <img *ngIf="!rightKv.value" style="height: 200px; width: 356px;" src="/img/clear.gif">
                     </div>
-                </div>
-                <div *ngIf="!rightKv.value">
-                    <div class="clear-gif"></div>
                 </div>
             </div>
             <div class="flex-center">

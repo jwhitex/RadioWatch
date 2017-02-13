@@ -65,8 +65,7 @@
       "Views",
       "web.config",
       "wwwroot",
-      "config.json",
-      "hosting.json"
+      "config.json"
     ],
     "exclude": [
       "wwwroot/dist/*.map"

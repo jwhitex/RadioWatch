@@ -1,6 +1,17 @@
 .chilling-on-porch {
     height: 736px; 
     width: 711px;
-    background-image: url("../../img/PeterStrutyvesant_LastDutchGovernorOfNewNetherlandsColony.jpg");
+    background-image: url("../../img/peter-strutyvesant-last-dutch-gov-large.jpg");
     background-size: 736px 711px;
+}
+
+@media (max-width: 711px) {
+
+.chilling-on-porch {
+    height: 350px; 
+    width: 338px;
+    background-image: url("../../img/peter-strutyvesant-last-dutch-gov-small.jpg");
+    background-size: 350px 338px;
+}
+
 }
