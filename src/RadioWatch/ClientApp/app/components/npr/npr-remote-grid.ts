@@ -5,6 +5,7 @@ import { IPhxRmtGridInit, IPhxRmtGridInitColumn } from '../../actions';
 import { select } from 'ng2-redux';
 import { List } from 'immutable';
 import { BehaviorSubject, Observable, Observer, Subscription } from 'rxjs';
+import * as moment from 'moment';
 
 @Component({
     selector: 'npr-remote-grid',
@@ -21,11 +22,9 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     dateValidator() : ValidatorFn {
         return (control: AbstractControl): {[key: string]: any} => {
             const queryDate = control.value;
-            if (queryDate.length != 10)
-               return {'invalidDate': {queryDate}}
-            var timestamp=Date.parse(queryDate)
-            const no = isNaN(timestamp);
-            return no ? {'invalidDate': {queryDate}} : null;
+            if (!moment(queryDate).isValid())
+                return {'invalidDate': {queryDate}}
+            return null;
         };
     }
 
@@ -62,7 +61,7 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     validationMessages = {
         'queryDate': {
             'required' : 'Date is required',
-            'invalidDate' : "Input is invalid. Format shoudld be 'yyyy-MM-dd'"
+            'invalidDate' : "Date is invalid."
         },
         'queryTerm': {}
     }
@@ -133,14 +132,22 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
             if (next !== undefined && next) {
                 let queryKeys = JSON.parse(next);
                 if (queryKeys !== undefined && queryKeys && JSON.stringify(queryKeys) !== '{}') {
-                    this.searchFormModel.queryDate = queryKeys.queryDate
-                    this.searchFormModel.queryTerm = queryKeys.queryTerm;
+                    const form = this.nprQueryForm;
+                    this.searchFormModel.queryDate = queryKeys.queryDate;
+                    this.searchFormModel.queryTerm = queryKeys.queryTerm; //needed?
+                    let control_queryDate = form.get("queryDate");
+                    let control_queryTerm = form.get("queryTerm");
+                    control_queryDate.setValue(queryKeys.queryDate);
+                    control_queryTerm.setValue(queryKeys.queryTerm);
                     if (!this.dataSource$) {
                         this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(queryKeys.queryDate, queryKeys.queryTerm));
                     }
                 } else {
                     if (!this.dataSource$) {
                         this.dataSource$ = new BehaviorSubject<string>(this.calcDataSource(null));
+                        const form = this.nprQueryForm;
+                        let control_queryDate = form.get("queryDate");
+                        control_queryDate.setValue(queryKeys.queryDate);
                         this.searchFormModel.queryDate = this.getInitialDateForPicker();
                     }
                 }
@@ -158,12 +165,14 @@ export class PhalanxRemoteNprGridComponent implements OnInit, OnDestroy {
     }
 
     onSubmit() {
-        if (this.searchFormModel.queryTerm !== "") {
-            this.keywordDateSearch(this.searchFormModel.queryDate, this.searchFormModel.queryTerm);
+        let date = this.nprQueryForm.get("queryDate");
+        let term = this.nprQueryForm.get("queryTerm");
+        if (term.value !== "" && !isNaN(term.value)) {
+            this.keywordDateSearch(date.value, term.value);
         } else {
-            this.dateSearch(this.searchFormModel.queryDate);
+            this.dateSearch(date.value);
         }
-        this.extraDataSubject$.next(this.searchFormModel);
+        this.extraDataSubject$.next({ queryDate: date.value, queryTerm: term.value });
     }
 
     dateSearch(date: string) {

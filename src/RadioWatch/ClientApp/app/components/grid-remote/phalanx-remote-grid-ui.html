@@ -38,7 +38,7 @@
                 <a (click)="expandOrCollapseRow(c,i)"><i class="fa fa-music" aria-hidden="true"></i></a>
             </td>
             <td *ngFor="let col of setting.columns" [hidden]="!col.visible" [ngStyle]="{'width': gridBlockWidthPercent}">
-                <phx-remote-grid-block [value]="col.date_pipe != null ? (c.data[col.dataName] | date:col.date_pipe) : c.data[col.dataName]"></phx-remote-grid-block>
+                <phx-remote-grid-block [value]="col.date_pipe != null ? (c.data[col.dataName]) : c.data[col.dataName]"></phx-remote-grid-block> <!--| date: col.date_pipe date pipe not working across browsers-->
             </td>
             <td [hidden]="!setting.allowDelete">
                 <a (click)="deleteRow(c)">

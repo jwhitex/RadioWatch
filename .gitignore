@@ -5,3 +5,5 @@ global.json
 .gitattributes
 **/.vscode/**
 hosting.json
+webrun.sh
+.DS_Store
