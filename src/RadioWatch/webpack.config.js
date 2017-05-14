@@ -1,11 +1,8 @@
 var isDevBuild = process.argv.indexOf('--env.prod') < 0;
+var nodeEnvironment = isDevBuild ? 'development' : 'production';
 var path = require('path');
 var webpack = require('webpack');
 var merge = require('webpack-merge');
-
-configAlias = () => {
-    return path.join(__dirname, 'ClientAppConfig', (process.env.NODE_ENV == undefined) ? 'development' : process.env.NODE_ENV)
-}
 
 // Configuration in common to both client-side and server-side bundles
 var sharedConfig = {
@@ -13,7 +10,7 @@ var sharedConfig = {
     resolve: { 
         extensions: [ '', '.js', '.ts' ],
         alias: {
-            config: configAlias()
+            config: path.join(__dirname, 'ClientAppConfig', nodeEnvironment)
         }
     },
     output: {
@@ -39,6 +36,9 @@ var clientBundleConfig = merge(sharedConfig, {
         new webpack.DllReferencePlugin({
             context: __dirname,
             manifest: require('./wwwroot/dist/vendor-manifest.json')
+        }),         
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': `"${nodeEnvironment}"`
         })
     ].concat(isDevBuild ? [
         // Plugins that apply in development builds only
