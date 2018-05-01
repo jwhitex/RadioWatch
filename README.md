@@ -9,7 +9,7 @@ Building this app was my first experience with Angular 2 framework (including re
   - Embeded Youtube Player
   - Video slider
 
-Hats off to Cleveland, who hosts Evening Music at [wutc](http://www.wutc.org) in Chattanooga, TN. I pull from his playlist hosted at npr.
+Hats off to Cleveland, who hosts Evening Music at [WUTC](http://www.wutc.org) in Chattanooga, TN. I pull from his playlist hosted at npr.
 
 Things I should have done differently:
 
