@@ -1,6 +1,6 @@
 # RadioWatch
 
-This is a web app I hosted for a while at RadioWatch.io. I have since taken it down. A successor to this project will be a spotify playlist integration using aws api/lambda. That is (albeit slowly) on its way.
+This is a web app I hosted for a while at RadioWatch.io. I have since taken it down. A successor to this project will be a spotify playlist integration using aws api/lambda.
 
 ## About
 
