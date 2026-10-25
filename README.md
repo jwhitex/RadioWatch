@@ -1,22 +1,22 @@
 # RadioWatch
 
-This is a web app I hosted for a while at rad. I have since taken it down. A successor to this project will be a spotify playlist integration using aws api/lambda.
+A web app built to test the workflow/features of developing in Angular 2.
 
 ## About
 
-Building this app was my first experience with Angular 2 framework (including redux/rx.js). There are some cool components here including: 
+My first experience with Angular 2 framework (including redux/rx.js). There are some cool components here including: 
   - Expando Grid Implementation
   - Embeded Youtube Player
   - Video slider
 
-Hats off to Cleveland, who hosts Evening Music at [WUTC](http://www.wutc.org) in Chattanooga, TN. I pull from his playlist hosted at npr.
+My thanks to the local NPR station, [WUTC](http://www.wutc.org). They're evening music playlist is what was used to generate the youtube playlist.
 
-Things I should have done differently:
+### Learned:
 
-- The video slider inside the grid row expanse is controlled by mouse wheel events. This should be handled differently. It is crappy on mobile and on laptops the scroll just feels wonky. 
+- The video slider inside the grid row expanse is controlled by mouse wheel events. This should be handled differently. It is junk on mobile and on laptops. 
 - Just use moment (js)...
-- Focus less on building a grid capable of packaging. (Avoid useless features!)
-- Don't Redux everything...
+- Focus less on building a grid capable of packaging.
+- Don't Redux everything...huge waste of time if you don't need the features that Redux enables.
 
 ## Publish
 
